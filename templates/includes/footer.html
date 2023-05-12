@@ -1,0 +1,20 @@
+{% load custom_filters %}
+{% with view_name=request.resolver_match.view_name %}
+<div class="container">
+  <footer class="mt-5">
+    <ul class="nav justify-content-center border-bottom">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'problem_solving:about_us' %}">О сайте</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="mailto:problem.solving.framevork@gmail.com">Email</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://t.me/Unikalnynik>Telegram">Telegram</a>
+      </li>
+    </ul>
+    <p class="text-center text-muted">Beta testing version 0.3.0</p>
+    <p class="text-center text-muted p-0">Copyright {% now "Y" %}</p>
+  </footer>
+</div>
+{% endwith %}

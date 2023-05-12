@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% block content %}
+  <div class="p-3">
+    {{ content | markdown | safe }}
+  </div>
+{% endblock %}

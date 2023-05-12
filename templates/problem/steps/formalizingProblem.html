@@ -1,0 +1,174 @@
+<div
+    x-data="{
+      requirements: formalizing_problem.requirements,
+      preferences: formalizing_problem.preferences,
+      interests_of_others: formalizing_problem.interests_of_others
+   }">
+  <h6 class="my-4">
+    <a class="link-secondary text-decoration-none cursor-pointer"
+       data-bs-toggle="tooltip"
+       data-bs-trigger="hover"
+       data-bs-delay='{"show": 500, "hide": 100 }'
+       data-bs-custom-class="tooltip-header"
+       data-bs-title="Когда мы познакомились с
+         проблемой лучше - пора обдумать каким должен быть результат решения.
+         Как мы поймём что проблема решена? Чего и сколько будет, когда мы решим проблему?
+         Как должны учитываться интересы других агентов?">Оформление проблемы</a>
+  </h6>
+
+  <div class="row row-cols-1 row-cols-lg-2">
+    <div class="col mb-4">
+      <ul x-data="{showInputRequirements: JSON.parse(
+                localStorage.getItem(STORAGE_SHOW_INPUT_REQ) || 'true')}"
+          class="list-group">
+        <li class="list-group-item" :class="!showInputRequirements && 'border-bottom-0'">
+          <div class="row row-cols-3">
+            <div class="col-7 col-sm-8">
+                <span class="lead text-secondary">Требования к результату</span>
+            </div>
+            <div class="col-3 col-sm-2 lead text-secondary text-nowrap"
+                 x-text="$store.problem.requirementsSumm(id)"></div>
+            <div class="col-2">
+              <div @change="localStorage.setItem(STORAGE_SHOW_INPUT_REQ, showInputRequirements)"
+                     class="form-check form-switch">
+                  <input class="form-check-input cursor-pointer"
+                         type="checkbox"
+                         @change="showInputRequirements = !showInputRequirements"
+                         :checked="showInputRequirements"
+                         id="showTooltip"
+                         data-bs-trigger="hover"
+                         data-bs-toggle="tooltip"
+                         data-bs-custom-class="tooltip-switch"
+                         data-bs-title="Скрыть форму">
+                </div>
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item"
+            :class="requirements.length && 'border-bottom-0'"
+            x-show="showInputRequirements" x-transition
+            x-data="{newReq: {key: '', value: null, complited: false }}">
+          <div class="row row-cols-2">
+            <div class="col-8">
+              <input class="form-control col-sm-4 form-control-plaintext cursor-pointer"
+                     x-ref="reqKey"
+                     placeholder="Требования"
+                     x-model="newReq.key"
+                     @change="$refs.reqValue.focus()"
+                     type="text">
+            </div>
+            <div class="col-3">
+              <input class="form-control col-sm-2 form-control-plaintext cursor-pointer"
+                     x-ref="reqValue"
+                     placeholder="Вес"
+                     x-model="newReq.value"
+                     @change="$store.problem.handleNewRequirement(id, newReq, requirements, $refs.reqValue, $refs.reqKey)"
+                     type="number">
+            </div>
+          </div>
+        </li>
+        <template x-if="requirements">
+          <template x-for="(req, index) in requirements">
+            <li class="list-group-item ">
+              <div class="row row-cols-2">
+                <div class="col-8">
+                  <div class="d-flex flex-nowrap gap-3 align-items-center">
+                    <input class="form-check-input cursor-pointer"
+                           type="checkbox"
+                           @change="$store.problem.problemUpdate(id, {formalizing_problem: {requirements}})"
+                           x-model="req.completed">
+                    <input class="form-control form-control-plaintext cursor-pointer"
+                           x-model="req.key"
+                           @change="$store.problem.problemUpdate(id, {formalizing_problem: {requirements}})"
+                           type="text">
+                  </div>
+                </div>
+                <div class="col-2">
+                  <input class="form-control form-control-plaintext cursor-pointer"
+                         x-model="req.value"
+                         @change="$store.problem.problemUpdate(id, {formalizing_problem: {requirements}})"
+                         type="number">
+                </div>
+                <div class="col-2">
+                  <button type="button" class="btn-close" aria-label="Close"
+                          @click="$store.problem.handleDeleteReq(id, index, requirements)"></button>
+                </div>
+              </div>
+            </li>
+          </template>
+        </template>
+      </ul>
+    </div>
+    <div class="col mb-4">
+      <ul x-data="{showInputPreferences: JSON.parse(
+                localStorage.getItem(STORAGE_SHOW_INPUT_PREF) || 'true')}"
+          class="list-group">
+        <li class="list-group-item"
+            :class="!showInputPreferences && 'border-bottom-0'">
+          <div class="d-flex justify-content-between align-items-end">
+            <span class="lead text-secondary">Что я получу решив проблему?</span>
+            <div @change="localStorage.setItem(STORAGE_SHOW_INPUT_PREF, showInputPreferences)"
+                 class="form-check form-switch">
+              <input class="form-check-input cursor-pointer"
+                     type="checkbox"
+                     @change="showInputPreferences = !showInputPreferences"
+                     :checked="showInputPreferences"
+                     id="showTooltip"
+                     data-bs-trigger="hover"
+                     data-bs-toggle="tooltip"
+                     data-bs-custom-class="tooltip-switch"
+                     data-bs-title="Скрыть форму">
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item"
+            x-show="showInputPreferences" x-transition
+            :class="preferences.length && 'border-bottom-0'"
+            x-data="{newPref: {key: '', completed: false}}">
+          <div class="d-flex flex-nowrap gap-3 align-items-center">
+            <input class="form-control form-control-plaintext cursor-pointer"
+                   placeholder="Преференции"
+                   x-ref="refNewPref"
+                   x-model="newPref.key"
+                   @change="$store.problem.handleNewPref(id, newPref, $refs.refNewPref)"
+                   type="text">
+          </div>
+        </li>
+        <template x-if="preferences">
+          <template x-for="(pref, index) in preferences">
+            <li class="list-group-item">
+              <div class="d-flex flex-nowrap gap-3 align-items-center">
+                <input class="form-check-input cursor-pointer"
+                       type="checkbox"
+                       @change="$store.problem.problemUpdate(id, {formalizing_problem: {preferences}})"
+                       x-model="pref.completed">
+                <input class="form-control form-control-plaintext cursor-pointer"
+                       x-model="pref.key"
+                       @change="$store.problem.problemUpdate(id, {formalizing_problem: {preferences}})"
+                       type="text">
+                <button type="button" class="btn-close" aria-label="Close"
+                        @click="$store.problem.handleDeletePref(id, index, preferences)"></button>
+              </div>
+            </li>
+          </template>
+        </template>
+      </ul>
+    </div>
+  </div>
+  <div class="mb-4">
+    <div class="form-floating border rounded">
+      <textarea class="form-control form-control-plaintext cursor-pointer"
+                x-model="interests_of_others"
+                @change="$store.problem.problemUpdate(id, {formalizing_problem: {interests_of_others}})"
+                @input="$store.problem.setHeightTextarea($el)"
+                :id="`formalizing_problem-${id}`"
+      ></textarea>
+      <label for="floatingTextarea">Интересы</label>
+    </div>
+    <div class="form-text"
+         x-show="$store.problem.showTooltip"
+         x-transition>Представьте, как в решении проблемы учтены интересы
+      других действующих лиц.
+    </div>
+  </div>
+</div>

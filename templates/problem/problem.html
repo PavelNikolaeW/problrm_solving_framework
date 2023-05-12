@@ -1,0 +1,98 @@
+{% load static %}
+{#TODO обработка случая с пустым списокм #}
+<main class="" x-data>
+
+  <div class="card">
+    <div
+        class="card-header d-flex justify-content-between align-items-center sticky-top bg-secondary-subtle">
+      <ul class="nav nav-tabs card-header-tabs "
+          role="tablist">
+        <template x-for="{title, id} in $store.problem.problems" :key="id">
+          <li class="nav-item">
+            <button class="nav-link" :class="$store.problem.isActiveButton(id)"
+                    x-text="title"
+                    @click="$store.problem.handleClickOnTabProblem(id)"
+                    :id="'tab-' + id"
+                    data-bs-toggle="tab"
+                    :data-bs-target="'#content' + id"
+                    type="button"
+                    role="tab"
+                    :aria-controls="'content' + id"
+            ></button>
+          </li>
+        </template>
+        <li class="nav-item">
+          <button class="nav-link" :class="!$store.problem.firstId && 'active'"
+                  id="tab-new"
+                  data-bs-toggle="tab"
+                  data-bs-target="#new-problem"
+                  type="button"
+                  role="tab"
+                  aria-controls="new-problem"
+                  :aria-selected="!$store.problem.problems.length">+
+          </button>
+        </li>
+      </ul>
+      <div class="form-check form-switch "
+           @change="$store.problem.tooltipToggle()">
+        <input class="form-check-input cursor-pointer"
+               type="checkbox"
+               :checked="$store.problem.showTooltip"
+               id="showTooltip"
+               data-bs-trigger="hover"
+               data-bs-toggle="tooltip"
+               data-bs-custom-class="tooltip-switch"
+               data-bs-title="включить подсказки на формах">
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="tab-content">
+        <template
+            x-for="{title, id, solutions, criterion, todos, search_problem, explore_problem, formalizing_problem, solutions_search_problem, evaluation_solution_problem} in $store.problem.problems"
+            :key="id">
+          <div class="tab-pane fade" :class="$store.problem.isActiveTab(id)"
+               :id="'content' + id"
+               role="tabpanel"
+               :aria-labelledby="'content' + id"
+          >
+
+            {########### КАРТОЧКА ПРОБЛЕМЫ ###########}
+            {% include 'problem/steps/searchProblem.html' %}
+            {% include 'problem/steps/exploreProblem.html' %}
+            {% include 'problem/steps/formalizingProblem.html' %}
+            {% include 'problem/steps/solutionSearchProblem.html' %}
+            {% include 'problem/steps/evaluationSilutionProblem.html' %}
+
+
+          </div>
+        </template>
+        {% include 'problem/newProblem.html' %}
+
+      </div>
+    </div>
+  </div>
+</main>
+<!-- Модальное окно -->
+<div class="modal fade" id="modalDialog" tabindex="-1"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Закрыть"></button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Закрыть
+        </button>
+        <button type="button" class="btn btn-danger"
+                data-bs-dismiss="modal" id="ModalBtnDelete">Удалить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="{% static 'js/problem/problem.js' %}"></script>

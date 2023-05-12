@@ -1,0 +1,68 @@
+{% load static %}
+<div class="table-responsive">
+  <table
+      class="table mb-0 table-hover"
+      :class="location.pathname === '/' && 'table-sm'"
+      id="todoTable">
+    <thead>
+    <tr>
+      <template x-for="col in Object.keys($store.todoInputValue)">
+        <th scope="col"
+            x-show="col !== 'id' && col !== 'category' && $store.todo.cols[col]"
+            :class="col === 'created' || col === 'due_date' ? 'cursor-pointer' : '' "
+            x-html="col"
+            @click="col === 'created' || col === 'due_date' ?
+            $store.todo.filterTodos('ordering', col) : '' "
+        ></th>
+      </template>
+      <th scope="col">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <template
+        x-for="{title, content, problem, category, completed, created, due_date, id} in $store.todo.todos"
+        :key="id">
+      <tr class="fw-normal">
+        <td class="align-middle" x-show="false">
+          <h6 class="mb-0"><span x-text="id"></span></h6>
+        </td>
+        <td class="align-middle" x-show="$store.todo.cols['title']">
+          <h6 class="mb-0"><span class="text-truncate" x-text="title"></span></h6>
+        </td>
+        <td class="align-middle" x-show="$store.todo.cols['content']">
+          <h6 class="mb-0"><span class="text-truncate" x-text="content"></span></h6>
+        </td>
+        <td class="align-middle" x-show="$store.todo.cols['created']">
+          <h6 class="mb-0"><span x-text="created"></span></h6>
+        </td>
+        <td class="align-middle" x-show="$store.todo.cols['due_date']">
+          <h6 class="mb-0"><span x-text="due_date"></span></h6>
+        </td>
+        <td class="align-middle" x-show="false">
+          <h6 class="mb-0"><span x-text="category && category.name"></span></h6>
+        </td>
+        <td class="align-middle" x-show="$store.todo.cols['problem']">
+          <h6 class="mb-0"><span x-text="problem && problem.title"></span></h6>
+        </td>
+        <td class="flex-row w-25">
+          <img @click="$store.todo.toggleTodo(id)"
+               class="cursor-pointer"
+               :src="completed ? $store.todo.done : $store.todo.make"
+               width="20"
+               alt="done"/>
+          <img @click="$store.todo.deleteTodo(id)"
+               class="cursor-pointer"
+               src="{% static 'icons/todo/delete.png' %}"
+               alt="delete"
+               width="20"/>
+          <img @click="$store.todo.openChangeForm(id, newTask, $refs.openFormTask)"
+               class="cursor-pointer"
+               src="{% static 'icons/todo/exchange.png' %}"
+               alt="change"
+               width="20"/>
+        </td>
+      </tr>
+    </template>
+    </tbody>
+  </table>
+</div>

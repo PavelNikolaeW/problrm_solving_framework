@@ -1,0 +1,174 @@
+<div
+    x-data="{problem_parts: explore_problem.problem_parts, cause_and_effect: explore_problem.cause_and_effect,}">
+  <div class="d-flex justify-content-between align-items-center">
+    <h6 class="my-4">
+      <a class="link-secondary text-decoration-none cursor-pointer"
+         data-bs-toggle="tooltip"
+         data-bs-trigger="hover"
+         data-bs-delay='{"show": 500, "hide": 100 }'
+         data-bs-custom-class="tooltip-header"
+         data-bs-title="Если мы уже решили заниматься проблемой - узнаём её получше.
+                 На что/на кого в мире она влияет? Какие факторы её формируют?
+                 Если мы не можем хорошо ответить на эти вопросы -
+                 нам нужно добрать знания для ответа.">Исследование проблемы</a>
+    </h6>
+    <div class="form-check form-switch"
+         @change="$store.problem.InputPartsToggle(id)">
+      <input class="form-check-input cursor-pointer"
+             type="checkbox"
+             :checked="$store.problem.showInputParts"
+             id="showTooltip"
+             data-bs-trigger="hover"
+             data-bs-toggle="tooltip"
+             data-bs-custom-class="tooltip-switch"
+             data-bs-title="Форма редактирования частей">
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <div class="d-flex justify-content-center">
+      <ul class="list-inline m-0">
+        <template x-for="(item, index) in cause_and_effect">
+          <li class="list-inline-item">
+            <div class="d-flex flex-row  align-items-center gap-2">
+              <input class="form-control form-control-plaintext cursor-pointer"
+                     x-model="item"
+                     @change="$store.problem.handleChangeCauseExplore(item, index, id)"
+                     :size="item.length + (item.length / 10) * 1.2 || 2">
+              <div>&rarr;</div>
+            </div>
+          </li>
+        </template>
+        <li class="list-inline-item" x-data="{newItem: ''}">
+          <input class="form-control form-control-plaintext cursor-pointer"
+                 x-model="newItem"
+                 :id="'NewCauseExplore'+id"
+                 placeholder="?" :size="newItem.length + newItem.length / 10 * 1.2 || 2"
+                 @change="$store.problem.handleNewCauseExplore(newItem, id)">
+        </li>
+      </ul>
+    </div>
+    <div class="form-text cursor-pointer text-center"
+         x-show="$store.problem.showTooltip"
+         x-transition
+         data-bs-toggle="tooltip"
+         data-bs-trigger="hover"
+         data-bs-delay='{"show": 500, "hide": 100 }'
+         data-bs-custom-class="tooltip-header"
+         data-bs-title="Возможно причина проблемы в поведенческих паттернах других людей или
+                        проблема возникла из-за собственных убеждений в чем то.">
+      Опишите цепочку из причин и следствий которые приводят к проблеме.
+    </div>
+  </div>
+
+  <div class="mb-4 row row-cols-1" :class="$store.problem.showInputParts && 'row-cols-sm-2'">
+    <div class="col mb-4" x-show="$store.problem.showInputParts" x-transition>
+      <ul class="list-group">
+        <li class="list-group-item border-bottom-0 disabled">
+          <div class="row row-cols-2">
+            <span class="col-9 lead">Часть:</span>
+            <span class="col-3 lead">Вес:</span>
+          </div>
+        </li>
+        <template x-if="problem_parts">
+          <template x-for="(part, index) in problem_parts">
+            <li class="list-group-item">
+              <div class="row row-cols-2">
+                <div class="col-9">
+                  <input class="form-control col-sm-4 form-control-plaintext cursor-pointer"
+                         x-model="part.key"
+                         :id="`part-key-${index}-${id}`"
+                         @change="$store.problem.handleChangePartExplore(part, index, id)"
+                         type="text">
+                </div>
+                <div class="col-3">
+                  <input class="form-control col-sm-2 form-control-plaintext cursor-pointer"
+                         x-model="part.value"
+                         :id="`part-value-${index}-${id}`"
+                         @change="$store.problem.handleChangePartExplore(part, index, id)"
+                         type="number">
+                </div>
+              </div>
+            </li>
+          </template>
+        </template>
+        <li class="list-group-item" x-data="{newPart: ''}">
+          <div class="row pb-1">
+            <div class="col-9">
+              <input type="text "
+                     :id="'new-part'+id"
+                     x-model="newPart"
+                     placeholder="?"
+                     @change="$store.problem.handleNewPartExplore(newPart, id)"
+                     class="form-control col-sm-4 form-control-plaintext cursor-pointer">
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="col"
+         x-model="$store.problem.showInputParts">
+      <canvas class="border rounded" :id="'parts-of-problem-' + id"></canvas>
+    </div>
+    <div class="form-text"
+         x-show="$store.problem.showTooltip && $store.problem.showInputParts"
+         x-transition>
+      Подумайте, из каких частей состоит ваша проблема.
+    </div>
+  </div>
+
+  <div class="row row-cols-1 row-cols-lg-2">
+    <div class="mb-3 col">
+      <ul class="list-group"
+          x-ref="todoList"
+          x-data="{newTodo: {
+                    author: USER.id,
+                    title: '',
+                    category: CATEGORIES.success,
+                    created: TODAY,
+                    due_date: DEFAULT_DUE_DATE,
+                    problem: id}}">
+        <li class="list-group-item lead disabled">Что можно сделать что бы лучше понять проблему?
+        </li>
+        <li class="list-group-item" :clss="!explore_problem.todos && 'border-bottom-0'">
+          <input class="form-control form-control-plaintext cursor-pointer"
+                 placeholder="Задача"
+                 @change="$store.problem.todoCreate(id, newTodo, todos, $el)"
+                 x-model="newTodo.title"
+                 type="text">
+        </li>
+        <template x-for="(todo, index) in todos" x-ref="todoTemplate">
+          <li class="list-group-item d-flex align-items-center gap-3">
+            <input class="form-check-input cursor-pointer"
+                   type="checkbox"
+                   @change="$store.problem.todoUpdate(id, todo)"
+                   x-model="todo.completed"
+                   :id="'checkbox'+id">
+            <input class="form-control form-control-plaintext cursor-pointer"
+                   @change="$store.problem.todoUpdate(id, todo)"
+                   x-model="todo.title"
+                   type="text">
+            <button type="button" class="btn-close" aria-label="Close"
+                    @click="$store.problem.deleteTodo(index, todos)"></button>
+          </li>
+        </template>
+      </ul>
+    </div>
+    <div class="md-3 col">
+      <div class="form-floating border rounded">
+      <textarea class="form-control form-control-plaintext cursor-pointer"
+                x-model="explore_problem.identify"
+                @change="$store.problem.problemUpdate(id, {explore_problem: {identify: explore_problem.identify}})"
+                @input="$store.problem.setHeightTextarea($el)"
+                :id="`explore-problem-identify-${id}`"
+      ></textarea>
+        <label for="floatingTextarea">Связи</label>
+      </div>
+      <div class="form-text"
+           x-show="$store.problem.showTooltip"
+           x-transition>Опишите как проблема связана с другими проблемами или
+        вещами в мире. На что повлияет решение проблемы, или что может повлиять на решение проблемы.
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,61 @@
+<div class="pb-2 collapse" id="collapseNewTask">
+  <div class="card">
+    <div class="card-body">
+      <div class="d-flex flex-column gap-3 align-items-center">
+        <input type="text" class="form-control form-control-lg"
+               id="title"
+               :placeholder="$store.todo.error ? 'title is required' : 'title' "
+               x-model="newTask.title"
+        >
+        <textarea type="text" class="form-control form-control-lg"
+                  id="content"
+                  placeholder="content"
+                  rows="3"
+                  x-model="newTask.content"
+
+        ></textarea>
+        <input type="date" class="form-control form-control-lg"
+               x-model="newTask.due_date"
+               id="date">
+        <div class="d-flex w-100 gap-2 align-self-end">
+{#          <select class="CATEGORY form-control form-control-lg "#}
+{#                  x-model="newTask.category">#}
+{#            <option selected>Category</option>#}
+{##}
+{#            <template x-for="{key, value} in $store.todo.categories" :key="value">#}
+{#              <option x-text="key"#}
+{#                      :value="value"#}
+{#                      :selected="value === $store.newTask?.category"#}
+{#              ></option>#}
+{#            </template>#}
+{#          </select>#}
+{#          <select class="PROBLEM form-control form-control-lg"#}
+{#                  x-model="newTask">#}
+{#            <option selected="true">Problem</option>#}
+{##}
+{#            <template x-for="{title, id} in $store.todo.problems" :key="id">#}
+{#              <option x-text="title"#}
+{#                      :value="id"#}
+{#              ></option>#}
+{#            </template>#}
+{#          </select>#}
+        </div>
+        <div>
+          <button type="button"
+                  class="btn btn-primary"
+                  x-text="'save'"
+                  @click="$store.todo.taskUpdate(newTask)"
+          >
+          </button>
+          <button type="button"
+                  class="btn btn-primary"
+                  x-text="'Reset'"
+                  @click="$store.todo.resetForm(newTask)"
+          >
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="my-4">
+</div>

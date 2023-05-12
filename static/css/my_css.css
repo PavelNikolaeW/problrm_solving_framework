@@ -1,0 +1,39 @@
+.cursor-pointer:hover {
+    cursor: pointer;
+}
+
+/*.bg-secondary-hover:hover {*/
+/*    background-color: var(--bs-secondary-bg-subtle);*/
+/*}*/
+
+
+textarea {
+    resize: none;
+    overflow: hidden;
+    min-height: 50px;
+}
+
+
+
+.cell-text {
+    text-overflow: ellipsis;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+
+.tooltip-switch {
+    --bs-tooltip-bg: var(--bs-secondary);
+}
+
+.tooltip-header {
+    --bs-tooltip-bg: var(--bs-secondary);
+    --bs-tooltip-max-width: 50%;
+}
+
+.tooltip-textarea {
+    --bs-tooltip-bg: var(--bs-secondary);
+    --bs-tooltip-max-width: 100%;
+    margin: -20px;
+}

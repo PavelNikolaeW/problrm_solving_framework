@@ -1,0 +1,47 @@
+<div class="tab-pane fade" :class="!$store.problem.firstId && 'show active'"
+     id="new-problem"
+     role="tabpanel"
+     aria-labelledby="new-problem">
+
+  {% include 'components/subTitle.html'
+    with
+    title="Стратегирование и поиск проблемы"
+    tooltip="Когда мы замечаем дискомфорт мы можем начать рассматривать его источник как проблему. Тут мы получаем первую версию описания проблемы и принимаем решение будем ли мы этой проблемой заниматься."
+    only
+  %}
+
+
+  <div class="d-flex justify-content-center" x-data="{newProblem: {title: ''}}">
+
+    <div class="mb-3">
+      <input type="text"
+             x-model="newProblem.title"
+             :size="newProblem.title.length < 10 ? 20 : newProblem.title.length + 5"
+             class="form-control form-control-plaintext form-control-lg cursor-pointer"
+             id="new-problem-titile"
+             @change="$store.problem.newProblem(newProblem, $el)"
+             placeholder="Название проблемы">
+      <div class="form-text"
+           id="basic-addon4"
+           x-show="$store.problem.showTooltip">Придумайте имя для вашей проблемы.
+      </div>
+    </div>
+  </div>
+
+
+{#  <div class="mb-3">#}
+{#    <div class="form-floating">#}
+{#              <textarea class="form-control form-control-plaintext cursor-pointer"#}
+{#                        x-model="search_problem.description"#}
+{#                        id="search-problem-description"#}
+{#                        style="height: 100px"></textarea>#}
+{#      <label for="floatingTextarea">Описание проблемы</label>#}
+{#    </div>#}
+{#    <div class="form-text"#}
+{#         x-show="tooltipOn">Описать то что дискомфортно, понять что не устраивает в этом#}
+{#      мире. Или понять что не устраивает других людей, что приносит им дискомфорт.#}
+{#    </div>#}
+{#  </div>#}
+
+
+</div>

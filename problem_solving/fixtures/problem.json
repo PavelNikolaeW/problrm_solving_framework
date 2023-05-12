@@ -1,0 +1,125 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "admin",
+      "password": "pbkdf2_sha256$390000$pNuMMfylkqPjorfxSOoMPi$OFi8FBbhzFkpN62k1+TeVhZwm7Tyc7q9Xlw30axDSjI=",
+      "is_staff": true,
+      "is_superuser": true
+    }
+  },
+  {
+    "model": "problem_solving.SearchProblem",
+    "pk": 1,
+    "fields": {
+        "title": "search_title",
+        "description": "Lorem input",
+        "importance": 2,
+        "skill": 5,
+        "reasoning": "Lorem input"
+       }
+  },
+  {
+    "model": "problem_solving.ExploreProblem",
+    "pk": 1,
+    "fields": {
+        "cause_and_effect": ["kek", "lol"],
+        "problem_parts": [{"key": "kek", "value": 15}, {"key": "lol", "value": 25}],
+        "identify": "Lorem input"
+       }
+  },
+  {
+    "model": "problem_solving.FormalizingProblem",
+    "pk": 1,
+    "fields": {
+        "requirements": [ {"key": "kek", "value": 15, "completed": false},
+                          {"key": "lol", "value": 25, "completed": false}],
+        "interests_of_others": "Lorem input",
+        "preferences": [{"key": "kek", "completed": false},
+                        {"key": "lol", "completed": false}]
+       }
+  },
+  {
+    "model": "problem_solving.SolutionSearchProblem",
+    "pk": 1,
+    "fields": {
+        "sota": "Lorem input",
+        "example_solutions": "Lorem input",
+        "solutions": [{"key": "kek", "value": 15}, {"key": "lol", "value": 25}]
+       }
+  },
+  {
+    "model": "problem_solving.EvaluationSolutionsProblem",
+    "pk": 1,
+    "fields": {
+        "solution_steps": ["kek", "lol"],
+        "criterion": [{"key": "kek", "value": 15}, {"key": "lol", "value": 25}],
+        "table": [{"key": "kek", "value": 15}, {"key": "lol", "value": 25}],
+        "criteria_opinion": "Lorem input"
+       }
+  },
+  {
+    "model": "problem_solving.problem",
+    "pk": 1,
+    "fields": {
+      "author": 1,
+      "title": "from fixture",
+      "search_problem": 1,
+       "explore_problem": 1,
+       "formalizing_problem": 1,
+       "solutions_search_problem": 1,
+       "evaluation_solution_problem": 1
+    }
+  },
+  {
+    "model": "problem_solving.Category",
+    "pk": 1,
+    "fields": {"color": 0}
+  },
+  {
+    "model": "problem_solving.Category",
+    "pk": 2,
+    "fields": {"color": 1}
+  },
+  {
+    "model": "problem_solving.Category",
+    "pk": 3,
+    "fields": {"color": 2}
+  },
+  {
+    "model": "problem_solving.Category",
+    "pk": 4,
+    "fields": {"color": 3}
+  },
+  {
+    "model": "problem_solving.Category",
+    "pk": 5,
+    "fields": {"color": 4}
+  },
+  {
+    "model": "problem_solving.Category",
+    "pk": 6,
+    "fields": {"color": 5}
+  },
+  {
+    "model": "problem_solving.Category",
+    "pk": 7,
+    "fields": {"color": 6}
+  },
+  {
+    "model": "problem_solving.Category",
+    "pk": 8,
+    "fields": {"color": 7}
+  },
+  {
+    "model": "problem_solving.Category",
+    "pk": 9,
+    "fields": {"color": 8}
+  },
+  {
+    "model": "problem_solving.Category",
+    "pk": 10,
+    "fields": {"color": 9}
+  }
+]

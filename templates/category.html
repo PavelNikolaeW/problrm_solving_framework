@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="columns has-background-link has-text-white is-centered" style="min-height: 101vh;">
+	<div class="column is-half">
+    	<h1 class="is-size-4 has-text-centered"> Отредактируйте ваши категории </h1>
+    	<form action="" method="post">
+        	{% csrf_token %}
+        	<!-- csrf для базовой безопасности нашего приложения -->
+            <div class="field has-text-centered">
+            	<label for="description" class="label has-text-white-bis"> Введите категории </label>
+            	<div class="control">
+     	           <input type="text" id="description" class="input" placeholder="Какого рода у вас дела?"
+                    	name="name" required>
+            	</div>
+            	<div class="field">
+                	<button class="button is-primary" name="Add" type="submit">
+                    	<span class="icon is-small">
+                        	<i class="fa fa-plus"></i>
+                    	</span>
+                    	<span>Добавить категорию</span>
+                	</button>
+                	<button class="button is-danger" name="Delete" formnovalidate="" type="submit">
+                    	<span class="icon is-small">
+           	             <i class="fa fa-trash-o"></i>
+                    	</span>
+	                    <span> Удалить категорию </span>
+                	</button>
+            	</div>
+            </div>
+
+            <!--  cписок наших категорий -->
+            <div class="list is-hoverable">
+            	{% for category in categories %}
+            	<div class="list-item">
+                	<label class="checkbox">
+                    	<input type="checkbox" class="checkbox" name="check" value="{{category.id}}">
+                    	<span class="complete-">{{ category.name }}</span>
+                	</label>
+            	</div>
+            	{% endfor %}
+
+        	</div>
+    	</form>
+	</div>
+    {% endblock %}

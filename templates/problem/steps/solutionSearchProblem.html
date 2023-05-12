@@ -1,0 +1,106 @@
+<div x-data="{
+    sota: solutions_search_problem.sota,
+    example_solutions: solutions_search_problem.example_solutions,
+    solutions: solutions
+ }">
+  <h6 class="my-3">
+    <a class="link-secondary text-decoration-none cursor-pointer"
+       data-bs-toggle="tooltip"
+       data-bs-trigger="hover"
+       data-bs-delay='{"show": 500, "hide": 100 }'
+       data-bs-custom-class="tooltip-header"
+       data-bs-title="Мы знаем, как устроена проблема и что должно быть,
+         когда она решится. Теперь у нас не проблема, а задача! Ищем решения максимально широко.
+         Опрашиваем тех, кого можем считать командой. Выясняем, кто уже решал похожие или такие же
+         проблемы и узнаём, как они это делали.">Поиск решений</a>
+  </h6>
+  <div class="row row-cols-1 row-cols-lg-2">
+    <div class="col mb-4">
+      <div class="form-floating border rounded">
+        <textarea class="form-control form-control-plaintext cursor-pointer"
+                  x-model="sota"
+                  @change="$store.problem.problemUpdate(id, {solutions_search_problem: {sota}})"
+                  @input="$store.problem.setHeightTextarea($el)"
+                  :id="'solutions_search_problem-sota-' + id"
+        ></textarea>
+        <label for="floatingTextarea">State-Of-The-Art</label>
+      </div>
+      <div class="form-text"
+           x-show="$store.problem.showTooltip"
+           x-transition>Какие мы знаем лучшие практики для решения похожих проблем?
+      </div>
+    </div>
+    <div class="col mb-4">
+      <div class="form-floating border rounded">
+      <textarea class="form-control form-control-plaintext cursor-pointer"
+                x-model="example_solutions"
+                @change="$store.problem.problemUpdate(id, {solutions_search_problem: {example_solutions}})"
+                @input="$store.problem.setHeightTextarea($el)"
+                :id="'solutions_search_problem-example-' + id"
+      ></textarea>
+        <label for="floatingTextarea">Примеры</label>
+      </div>
+      <div class="form-text"
+           x-show="$store.problem.showTooltip"
+           x-transition>Как эту проблему решали другие люди?
+      </div>
+    </div>
+  </div>
+
+  <div class="pb-4">
+    <ul x-data="{showSolutionSearch: JSON.parse(
+                localStorage.getItem(STORAGE_SHOW_INPUT_SOL) || 'true')}"
+        class="list-group">
+      <li class="list-group-item" :class="!showSolutionSearch && 'border-bottom-0'">
+        <div class="d-flex justify-content-between align-items-end">
+          <span class="lead text-secondary">Мозговой штурм</span>
+          <div @change="localStorage.setItem(STORAGE_SHOW_INPUT_SOL, showSolutionSearch)"
+               class="form-check form-switch">
+            <input class="form-check-input cursor-pointer"
+                   type="checkbox"
+                   @change="showSolutionSearch = !showSolutionSearch"
+                   :checked="showSolutionSearch"
+                   id="showTooltip"
+                   data-bs-trigger="hover"
+                   data-bs-toggle="tooltip"
+                   data-bs-custom-class="tooltip-switch"
+                   data-bs-title="Скрыть форму">
+          </div>
+        </div>
+      </li>
+      <template x-if="solutions">
+        <template x-for="(solution, index) in solutions">
+          <li class="list-group-item form-control-plaintext cursor-pointer">
+            <div class="d-flex justify-content-between align-items-center gap-2">
+              <input class="form-control form-control-plaintext cursor-pointer"
+                     x-ref="reqKey"
+                     x-model="solution.title"
+                     @change="$store.problem.solutionUpdate(solution)"
+                     type="text">
+              <template x-if="solution?.steps?.length">
+                <span class="badge bg-primary rounded-pill" x-text="solution.steps.length"></span>
+              </template>
+              <button type="button" class="btn-close" aria-label="Close"
+                      @click="$store.problem.solutionDelete(solution, solutions, index)"></button>
+            </div>
+          </li>
+        </template>
+      </template>
+      <li class="list-group-item"
+          x-show="showSolutionSearch" x-transition
+          x-data="{newSol: {title: '', problem_id: id}}">
+        <input class="form-control form-control-plaintext cursor-pointer"
+               x-ref="solTitle"
+               placeholder="?"
+               x-model="newSol.title"
+               @change="$store.problem.solutionCreate(newSol, solutions, $refs.solTitle)"
+               type="text">
+      </li>
+    </ul>
+    <div class="form-text"
+         x-show="$store.problem.showTooltip"
+         x-transition>Стараемся придумать максимальное количество решений.
+    </div>
+  </div>
+
+</div>

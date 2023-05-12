@@ -1,0 +1,140 @@
+{% load static %}
+<section>
+  {#TODO обработка случая с пустым списокм #}
+  <div class="container px-0 py-5" x-data="{newTask: {
+    author: USER.id,
+    title: '',
+    content: '',
+    created: TODAY,
+    due_date: DEFAULT_DUE_DATE,
+    category: 0,
+    problem: null,
+    completed: false
+  }}">
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col">
+        <div class="card" id="list1" >
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <a class="nav-link" href="{% url 'problem_solving:todo' %}">
+              <h6 class="card-title">TO DO</h6>
+            </a>
+            <a class="link"
+               x-ref="openFormTask"
+               data-bs-toggle="collapse"
+               data-bs-target="#collapseNewTask"
+               aria-expanded="false"
+               aria-controls="collapseNewTask">
+              Add a new task
+            </a>
+          </div>
+          <div x-data class="card-body">
+{#             Новая задача#}
+            {% include 'todo/newTask.html' %}
+{#             Управление таблицей#}
+            <div class="d-flex flex-wrap align-items-center mb-2">
+{#               Скрыть/показать колонки#}
+              {% include 'todo/toggleColumn.html' %}
+{#               Сортировка#}
+              <div class="dropdown PROBLEMS">
+                <button class="btn dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                  Problems
+                </button>
+                <ul class="dropdown-menu">
+                  <li class="form-check form-switch m-1">
+                    <label class="form-check-label"
+                           for="resetProblem"> reset
+                    </label>
+                    <input class="form-check-input"
+                           @click="$store.todo.filterTodos('problem',  '')"
+                           type="radio"
+                           name="filterProblems"
+                           id="resetProblem"
+                    >
+                  </li>
+                  <template
+                      x-for="{title, id} in $store.todo.problems"
+                      :key="id">
+                    <li class="form-check form-switch m-1">
+                      <label class="form-check-label"
+                             x-text="title"
+                             :for="'check' + title">
+                      </label>
+                      <input class="form-check-input"
+                             @click="$store.todo.filterTodos('problem',  id)"
+                             type="radio"
+                             name="filterProblems"
+                             :id="'check' + title"
+                             :value="id"
+                             :checked="$store.todo.filterBody.problem == id"
+                      >
+                    </li>
+                  </template>
+                </ul>
+              </div>
+{#              <div class="dropdown CATEGORIES">#}
+{#                <button class="btn dropdown-toggle"#}
+{#                        type="button"#}
+{#                        data-bs-toggle="dropdown"#}
+{#                        aria-expanded="false">#}
+{#                  Categories#}
+{#                </button>#}
+{#                <ul class="dropdown-menu">#}
+{#                  <li class="form-check form-switch m-1">#}
+{#                    <label class="form-check-label"#}
+{#                           for="resetCategiry"> reset#}
+{#                    </label>#}
+{#                    <input class="form-check-input"#}
+{#                           @click="$store.todo.filterTodos('category', '')"#}
+{#                           type="radio"#}
+{#                           name="filterCategory"#}
+{#                           id="resetCategory"#}
+{#                    >#}
+{#                  </li>#}
+{#                  <template#}
+{#                      x-for="{key, value} in $store.todo.categories" :key="value">#}
+{#                    <li class="form-check form-switch m-1">#}
+{#                      <label class="form-check-label"#}
+{#                             x-text="key"#}
+{#                             :for="'check' + key">#}
+{#                      </label>#}
+{#                      <input class="form-check-input"#}
+{#                             @click="$store.todo.filterTodos('category',  value)"#}
+{#                             type="radio"#}
+{#                             name="filterCategory"#}
+{#                             :id="'check' + key"#}
+{#                             :value="value"#}
+{#                             :checked="$store.todo.filterBody.category == value"#}
+{#                      >#}
+{#                    </li>#}
+{#                  </template>#}
+{#                </ul>#}
+{#              </div>#}
+              <div class="form-check">
+                <label class="form-check-label"
+                       :class="$store.todo.filterBody.completed === '' && 'cursor-pointer text-decoration-underline'"
+                       for="resetCategiry"
+                       @click="$store.todo.filterTodos('completed', '')"
+                > Completed
+                </label>
+                <input class="form-check-input"
+                       x-model="$store.todo.filterBody.completed"
+                       @click="$store.todo.filterTodos('completed', !$store.todo.filterBody.completed)"
+                       type="checkbox"
+                       name="filterCompleted"
+                       id="resetCategory"
+                       :value="$store.todo.filterBody.completed"
+                >
+              </div>
+            </div>
+{#             Задачи#}
+            {% include 'todo/table.html' %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script src="{% static 'js/todo/todo.js' %}"></script>

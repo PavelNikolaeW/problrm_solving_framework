@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="container vh-100 d-flex justify-content-center">
+    <div class="p-5 m-5">
+
+      <div class="mb-3">
+        <div class="form-floating">
+      <textarea class="form-control form-control-plaintext cursor-pointer"
+                x-bind="textarea"
+{#                x-model="description"#}
+{#                @change="$store.problem.problemUpdate(id, {search_problem: {description: description}})"#}
+                id="search-problem-description"></textarea>
+          <label for="floatingTextarea">Описание проблемы</label>
+        </div>
+        <div class="form-text"
+             x-show="$store.problem.showTooltip">Описать то что дискомфортно, понять что не
+          устраивает в этом
+          мире. Или понять что не устраивает других людей, если их проблема это ваша проблема,
+          выяснить что приносит им дискомфорт.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+
+      document.addEventListener('alpine:init', () => {
+          Alpine.data('textarea', (description) => ({
+              open: false,
+              t: "kek",
+              count: 0,
+
+              textarea: {
+                  ['x-model']() {
+                      return description
+                  },
+                  ['@change']() {
+                      console.log('kek')
+                  },
+
+                  ['x-text']() {
+                      return `${str} -> ${this.count}`
+                  },
+              },
+
+              tooltip: {
+                  ['x-show']() {
+                      return this.open
+                  },
+                  ['x-text']() {
+                      return this.t
+                  }
+              },
+          }))
+      })
+
+      function textarea() {
+          return {
+              open: false,
+
+              trigger: {
+                  'x-on:click'() {
+                      this.open = !this.open
+                  },
+              },
+
+              dialogue: {
+                  'x-show'() {
+                      return this.open
+                  },
+                  'x-bind:class'() {
+                      return 'foo bar'
+                  },
+              },
+          }
+      }
+  </script>
+{% endblock %}

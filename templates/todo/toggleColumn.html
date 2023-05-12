@@ -1,0 +1,24 @@
+<div class="dropdown COLUMNS">
+  <button class="btn dropdown-toggle"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false">
+    Columns
+  </button>
+  <ul class="dropdown-menu">
+    <template x-for="col in Object.keys($store.todoInputValue)">
+      <li class="form-check form-switch m-1"
+          x-show="col !== 'id' && col !== 'category'">
+        <label class="form-check-label"
+               x-text="col"
+               :for="'check' + col">
+        </label>
+        <input class="form-check-input"
+               @click="$store.todo.toggleColumn(col)"
+               type="checkbox"
+               :id="'check' + col"
+               :checked="$store.todo.cols[col]">
+      </li>
+    </template>
+  </ul>
+</div>
