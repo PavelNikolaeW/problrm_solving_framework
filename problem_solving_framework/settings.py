@@ -32,6 +32,7 @@ SECRET_KEY = 'django-insecure-b!$k+kw3wh^l1dd+r5mcy*joo4q1w4^&i&_f_*ssfddv#c6h0n
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    "problem-solving"
     # 'localhost', '127.0.0.1',
 ]
 
@@ -64,6 +65,8 @@ MIDDLEWARE = [
     # 'django.contrib.sites',
     # 'account',
 ]
+
+CSRF_TRUSTED_ORIGINS = ['https://problem-solving-framework.ru']
 
 ROOT_URLCONF = 'problem_solving_framework.urls'
 

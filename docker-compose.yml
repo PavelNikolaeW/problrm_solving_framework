@@ -1,0 +1,17 @@
+# Use postgres/example user/password credentials
+version: '2.2'
+
+services:
+
+  problem-solving:
+    env_file: .env
+    build:
+      context: .
+    networks:
+      - nginx_problem-solving-framework
+    restart: always
+
+
+networks:
+  nginx_problem-solving-framework:
+    external: true
