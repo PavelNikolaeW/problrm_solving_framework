@@ -1,11 +1,5 @@
-from logging import exception
-
-from djoser.serializers import UserSerializer
 from rest_framework.exceptions import ValidationError
-from rest_framework.relations import SlugRelatedField
 from rest_framework.serializers import Serializer, ModelSerializer, CharField, SerializerMethodField
-from rest_framework.utils import model_meta
-from rest_framework.validators import UniqueTogetherValidator
 
 from problem_solving.models import (User, Problem, Category, TodoList,
                                     SearchProblem,
@@ -15,12 +9,6 @@ from problem_solving.models import (User, Problem, Category, TodoList,
                                     EvaluationSolutionsProblem,
                                     PROBLEM_MODELS,
                                     EXPLORE_CATEGORY, Solution, Critery)
-
-
-class UserSerializer(UserSerializer):
-    class Meta:
-        model = User
-        fields = ("id", "username", "email")
 
 
 class SearchProblemSerializer(ModelSerializer):
