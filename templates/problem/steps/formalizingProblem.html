@@ -27,7 +27,7 @@
                 <span class="lead text-secondary">Требования к результату</span>
             </div>
             <div class="col-3 col-sm-2 lead text-secondary text-nowrap"
-                 x-text="$store.problem.requirementsSumm(id)"></div>
+                 x-text="$store.problem.requirementsSumm(requirements)"></div>
             <div class="col-2">
               <div @change="localStorage.setItem(STORAGE_SHOW_INPUT_REQ, showInputRequirements)"
                      class="form-check form-switch">
@@ -130,7 +130,7 @@
                    placeholder="Преференции"
                    x-ref="refNewPref"
                    x-model="newPref.key"
-                   @change="$store.problem.handleNewPref(id, newPref, $refs.refNewPref)"
+                   @change="$store.problem.handleNewPref(id, newPref, preferences, $refs.refNewPref)"
                    type="text">
           </div>
         </li>

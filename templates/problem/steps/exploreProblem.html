@@ -1,5 +1,7 @@
 <div
-    x-data="{problem_parts: explore_problem.problem_parts, cause_and_effect: explore_problem.cause_and_effect,}">
+    x-data="{
+    problem_parts: explore_problem.problem_parts,
+    cause_and_effect: explore_problem.cause_and_effect,}">
   <div class="d-flex justify-content-between align-items-center">
     <h6 class="my-4">
       <a class="link-secondary text-decoration-none cursor-pointer"
@@ -33,7 +35,7 @@
             <div class="d-flex flex-row  align-items-center gap-2">
               <input class="form-control form-control-plaintext cursor-pointer"
                      x-model="item"
-                     @change="$store.problem.handleChangeCauseExplore(item, index, id)"
+                     @change="$store.problem.handleChangeCauseExplore(item, cause_and_effect, index, id)"
                      :size="item.length + (item.length / 10) * 1.2 || 2">
               <div>&rarr;</div>
             </div>
@@ -44,7 +46,7 @@
                  x-model="newItem"
                  :id="'NewCauseExplore'+id"
                  placeholder="?" :size="newItem.length + newItem.length / 10 * 1.2 || 2"
-                 @change="$store.problem.handleNewCauseExplore(newItem, id)">
+                 @change="$store.problem.handleNewCauseExplore(newItem, cause_and_effect, id, $el)">
         </li>
       </ul>
     </div>
@@ -78,28 +80,28 @@
                   <input class="form-control col-sm-4 form-control-plaintext cursor-pointer"
                          x-model="part.key"
                          :id="`part-key-${index}-${id}`"
-                         @change="$store.problem.handleChangePartExplore(part, index, id)"
+                         @change="$store.problem.handleChangePartExplore(part, problem_parts, index, id)"
                          type="text">
                 </div>
                 <div class="col-3">
                   <input class="form-control col-sm-2 form-control-plaintext cursor-pointer"
                          x-model="part.value"
                          :id="`part-value-${index}-${id}`"
-                         @change="$store.problem.handleChangePartExplore(part, index, id)"
+                         @change="$store.problem.handleChangePartExplore(part, problem_parts, index, id)"
                          type="number">
                 </div>
               </div>
             </li>
           </template>
         </template>
-        <li class="list-group-item" x-data="{newPart: ''}">
+        <li class="list-group-item" x-data="{newPart: {key: null, value: null}}">
           <div class="row pb-1">
             <div class="col-9">
               <input type="text "
                      :id="'new-part'+id"
-                     x-model="newPart"
+                     x-model="newPart.key"
                      placeholder="?"
-                     @change="$store.problem.handleNewPartExplore(newPart, id)"
+                     @change="$store.problem.handleNewPartExplore(newPart, problem_parts, id, $el)"
                      class="form-control col-sm-4 form-control-plaintext cursor-pointer">
             </div>
           </div>

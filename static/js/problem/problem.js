@@ -1,14 +1,3 @@
-// TODO: скрывать незаполненые формы? как тогда их заполнять?
-// TODO: 1 отказаться от сложной таблицы в пользу простой с полем джейсон строкой? плюс в том что может быть любое количество полей, минусы?...
-// TODO: 2 минимальная версия должна включать шаги с брейн штормингом где нужно будет придумать
-//  варианты решения и + сделать оценку по тjму какие части проблемы она решает.
-//  тоесть буквально таблица с сопоставлением способ решения напротив какие части проблемы он решает.
-// TODO:
-// TODO: полоска загруски. нажимаеш галочку(выполнено требование к результату)  и полоса загрузки увеличивается
-//  полосу загрузки разместить в оглавлении таблицы
-// TODO: модальное окно с подтверждением, при удалении чего либо
-
-
 document.addEventListener('alpine:init', () => {
     Alpine.store('problem', {
         async init() {
@@ -145,7 +134,7 @@ document.addEventListener('alpine:init', () => {
             localStorage.setItem(STORAGE_SHOW_INPUT_PARTS, this.showInputParts)
             this.loadChart(id)
         },
-        // каку страницу с проблемой сейчас показывать
+        // какую страницу с проблемой сейчас показывать
         isActiveButton(id) {
             if (this.activeProblemId == id) return 'active'
         },
@@ -174,9 +163,7 @@ document.addEventListener('alpine:init', () => {
                 }
                 chart.update()
                 chart.resize()
-                return
-            }
-            this.createChart(id)
+            } else this.createChart(id)
         },
         createChart(id) {
             const el = document.getElementById("parts-of-problem-" + id)
@@ -202,7 +189,7 @@ document.addEventListener('alpine:init', () => {
                 rotation: 0,
                 circumference: 360,
             }
-            return {
+            else return {
                 maintainAspectRatio: false,
                 rotation: -90,
                 circumference: 180,
@@ -244,8 +231,7 @@ document.addEventListener('alpine:init', () => {
                 }).catch(handleError)
         },
         // работа с частями проблемы, обновление графика
-        handleChangePartExplore(part, index, id) {
-            const problem_parts = this._getProblem(id).explore_problem.problem_parts
+        handleChangePartExplore(part, problem_parts, index, id) {
             if (!part.key.length) problem_parts.splice(index, 1)
             else problem_parts[index] = part
             this.problemUpdate(id, {explore_problem: {problem_parts}})
@@ -260,52 +246,43 @@ document.addEventListener('alpine:init', () => {
                 explore_chart.update()
             }
         },
-        handleNewPartExplore(key, id) {
-            if (!key.length) return null
-            const explore_p = this._getProblem(id).explore_problem
-            if (!explore_p?.problem_parts) explore_p.problem_parts = [{key: key, value: null}]
-            else explore_p.problem_parts.push({key, value: null})
-            this.problemUpdate(id, {explore_problem: {problem_parts: explore_p.problem_parts}})
-            // фокус на новом элементе
-            setTimeout(() => {
-                const index = `part-value-${explore_p.problem_parts.length - 1}-${id}`
-                document.getElementById(index).focus()
-            }, 50)
-            // очистка ввода
-            const formPart = document.getElementById('new-part' + id)
-            formPart.value = ''
+        handleNewPartExplore(newPart, problem_parts, id, el) {
+            if (!newPart.key.length) return null
+            problem_parts.push({...newPart})
+            this.problemUpdate(id, {explore_problem: {problem_parts}})
+                .then(() => {
+                    setTimeout(() => {
+                        const index = `part-value-${problem_parts.length - 1}-${id}`
+                        document.getElementById(index).focus()
+                    }, 50)
+                    el.value = ''
+                }).catch(handleError)
         },
-        handleChangeCauseExplore(cause, index, id) {
-            const cause_and_effect = this._getProblem(id).explore_problem.cause_and_effect
+        handleChangeCauseExplore(cause, cause_and_effect, index, id) {
             if (!cause.length) cause_and_effect.splice(index, 1)
             else cause_and_effect[index] = cause
             this.problemUpdate(id, {explore_problem: {cause_and_effect}})
+                .catch(handleError)
         },
-        handleNewCauseExplore(cause, id) {
+        handleNewCauseExplore(cause, cause_and_effect, id, el) {
             if (!cause.length) return null
-            const explore_p = this._getProblem(id).explore_problem
-            if (!explore_p?.cause_and_effect) explore_p.cause_and_effect = [cause]
-            else explore_p.cause_and_effect.push(cause)
-            this.problemUpdate(id, {explore_problem: {cause_and_effect: explore_p.cause_and_effect}})
-                .then(() => {
-                    document.getElementById('NewCauseExplore' + id).value = ''
-                })
+            cause_and_effect.push(cause)
+            this.problemUpdate(id, {explore_problem: {cause_and_effect}})
+                .then(() => el.value = '')
+                .catch(handleError)
         },
         // обновление требований к результату
         handleNewRequirement(id, newReq, requirements, elValue, elKey) {
-            const formalizing_problem = this._getProblem(id).formalizing_problem
-            if (!formalizing_problem.requirements) formalizing_problem.requirements = [newReq]
-            else formalizing_problem.requirements.unshift({...newReq})
-            this.problemUpdate(id, {formalizing_problem: {requirements: formalizing_problem.requirements}})
+            requirements.unshift({...newReq})
+            this.problemUpdate(id, {formalizing_problem: {requirements}})
                 .then(() => {
                     elValue.value = null
                     elKey.value = ''
                     elKey.focus()
                 }).catch(handleError)
         },
-        requirementsSumm(id) {
-            const requirements = this._getProblem(id)?.formalizing_problem?.requirements
-            if (requirements) {
+        requirementsSumm(requirements) {
+            if (requirements.length) {
                 let all = 0
                 let completed = 0
                 requirements.forEach(item => {
@@ -319,19 +296,18 @@ document.addEventListener('alpine:init', () => {
         handleDeleteReq(id, index, requirements) {
             requirements.splice(index, 1)
             this.problemUpdate(id, {formalizing_problem: {requirements}})
+                .catch(handleError)
         },
-        handleNewPref(id, newPref, el) {
-            const formalizing_problem = this._getProblem(id).formalizing_problem
-            if (!formalizing_problem.preferences) formalizing_problem.preferences = [newPref]
-            else formalizing_problem.preferences.unshift({...newPref})
-            this.problemUpdate(id, {
-                formalizing_problem:
-                    {preferences: formalizing_problem.preferences}
-            }).then(() => el.value = '').catch(handleError)
+        handleNewPref(id, newPref, preferences, el) {
+            preferences.unshift({...newPref})
+            this.problemUpdate(id, {formalizing_problem: {preferences}})
+                .then(() => el.value = '')
+                .catch(handleError)
         },
         handleDeletePref(id, index, preferences) {
             preferences.splice(index, 1)
             this.problemUpdate(id, {formalizing_problem: {preferences}})
+                .catch(handleError)
         },
     })
 })
