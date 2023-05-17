@@ -11,29 +11,35 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 from concurrent.futures._base import LOGGER
 from pathlib import Path
-
+import os
+from dotenv import load_dotenv
 # включаю возможность создавать многострочные теги в шаблонах
 import re
 from django.template import base
-
 base.tag_re = re.compile(base.tag_re.pattern, re.DOTALL)
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+ENV = BASE_DIR / '.env'
+if not ENV.is_file():
+    ENV = BASE_DIR / '.env-prod'
+load_dotenv(ENV)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-b!$k+kw3wh^l1dd+r5mcy*joo4q1w4^&i&_f_*ssfddv#c6h0n'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
-DEBUG = True
+DEBUG = os.environ.get('DEBUG')
 
 ALLOWED_HOSTS = [
-    "problem-solving"
-    # 'localhost', '127.0.0.1',
+    "problem-solving",
+    'localhost', '127.0.0.1',
 ]
 
 # Application definition
@@ -156,18 +162,18 @@ REST_FRAMEWORK = {
     #     'rest_framework_simplejwt.authentication.JWTAuthentication',
     # ),
 }
-LOGGING = {
-    'version': 1,
-    'handlers': {
-        'console': {'class': 'logging.StreamHandler',}
-    },
-    'loggers': {
-        'django.db.backends': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        }
-    }
-}
+# LOGGING = {
+#     'version': 1,
+#     'handlers': {
+#         'console': {'class': 'logging.StreamHandler',}
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#         }
+#     }
+# }
 
 LOGIN_REDIRECT_URL = "problem_solving:index"
 
