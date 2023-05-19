@@ -56,7 +56,50 @@
                role="tabpanel"
                :aria-labelledby="'content' + id"
           >
-
+            <div class="d-flex justify-content-center">
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-secondary active"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#searchProblem"
+                        role="button"
+                        aria-expanded="true"
+                        aria-controls="searchProblem">П
+                </button>
+                <button type="button" class="btn btn-outline-secondary"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#exploreProblem"
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="exploreProblem">И
+                </button>
+                <button type="button" class="btn btn-outline-secondary"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#formalizingProblem"
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="formalizingProblem">О
+                </button>
+                <button type="button" class="btn btn-outline-secondary"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#solutionProblem"
+                        aria-expanded="false"
+                        aria-controls="solutionProblem">Р
+                </button>
+                <button type="button" class="btn btn-outline-secondary"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#evaluationProblem"
+                        aria-expanded="false"
+                        aria-controls="evaluationProblem">О
+                </button>
+                <button type="button" class="btn btn-outline-secondary"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#searchProblem"
+                        aria-expanded="false"
+                        aria-controls="searchProblem">П
+                </button>
+              </div>
+            </div>
+            <hr>
             {########### КАРТОЧКА ПРОБЛЕМЫ ###########}
             {% include 'problem/steps/searchProblem.html' %}
             {% include 'problem/steps/exploreProblem.html' %}
