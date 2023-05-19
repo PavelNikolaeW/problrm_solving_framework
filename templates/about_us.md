@@ -1,6 +1,6 @@
 #О сайте
 
-Сайт создан с целью популяризации усиления интелекта. Идейные вдохновители [augmentek](https://augmentek.online/). Материалы взяты [отсюда](https://www.notion.so/d05702d4225f464cad1cefdd4780794a?v=b2f2adaab9324187b04929c755b6b657&p=12e2a6d5ab934f64925fb67f6feb0f41&pm=s).
+Сайт создан с целью популяризации усиления интеллекта. Идейные вдохновители [augmentek](https://augmentek.online/). Материалы взяты [отсюда](https://www.notion.so/d05702d4225f464cad1cefdd4780794a?v=b2f2adaab9324187b04929c755b6b657&p=12e2a6d5ab934f64925fb67f6feb0f41&pm=s).
 
 При обнаружении ошибок, вопросов, предложений пишите на почту <problem.solving.framevork@gmail.com> или в телеграм [@Unikalnynik](https://t.me/Unikalnynik)
 
