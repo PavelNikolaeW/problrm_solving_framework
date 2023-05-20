@@ -1,5 +1,6 @@
 <div id="exploreProblem"
-     class="collapse"
+     class="collapse" :class="isShownExplore && 'show'"
+
      x-data="{
         problem_parts: explore_problem.problem_parts,
         cause_and_effect: explore_problem.cause_and_effect

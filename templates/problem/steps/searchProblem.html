@@ -1,5 +1,5 @@
 <div id="searchProblem"
-     class="collapse show"
+     class="collapse" :class="isShownSearch && 'show'"
      x-data="{
          importance: search_problem.importance,
          skill: search_problem.skill,
@@ -7,7 +7,7 @@
          reasoning: search_problem.reasoning
        }">
   <div class="d-flex justify-content-between">
-    <h6 class="my-3">
+    <h6 class="mb-3">
       <a class="link-secondary text-decoration-none cursor-pointer"
          data-bs-toggle="tooltip"
          data-bs-trigger="hover"
@@ -103,7 +103,7 @@
         выяснить что приносит им дискомфорт.
       </div>
     </div>
-    <div class="col mb-4">
+    <div class="col mb-3">
       <div class="form-floating border rounded">
       <textarea class="form-control form-control-plaintext cursor-pointer"
                 x-model="reasoning"

@@ -46,6 +46,12 @@ const STORAGE_SHOW_INPUT_PREF = USER.id + 'showInputPreferences'
 const STORAGE_SHOW_INPUT_REQ = USER.id + 'showInputRequirements'
 const STORAGE_SHOW_INPUT_SOL = USER.id + 'showInputSolutionSearch'
 
+const SHOW_SEHARCH = USER.id + 'isShownSearch'
+const SHOW_EXPLORE = USER.id + 'isShownExplore'
+const SHOW_FORMALIZING = USER.id + 'isShownFormalizing'
+const SHOW_SOLUTIONS = USER.id + 'isShownSolutions'
+const SHOW_EVALUETIONG = USER.id + 'isShownEvaluating'
+
 const NEW_TAB = 'tab-new'
 const HOST = location.origin
 const TOKEN = getCookie("csrftoken")

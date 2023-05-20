@@ -9,13 +9,10 @@ document.addEventListener('alpine:init', () => {
                 localStorage.getItem(STORAGE_IS_SHOW_TOOLTIP) || 'true')
             this.showInputParts = JSON.parse(
                 localStorage.getItem(STORAGE_SHOW_INPUT_PARTS) || 'true')
-
         },
         problems: [],
         firstId: null,
         activeProblemId: null,
-        showTooltip: null,
-        showInputParts: null,
 
         problemUpdate(id, body) {
             return api.wrapperFetch(`problems/${id}/`, 'PATCH', JSON.stringify(body))
@@ -333,3 +330,30 @@ setTimeout(() => {
 const MODAL_DIALOG = document.getElementById('modalDialog')
 const MODAL_BODY = document.getElementById('modalBody')
 const MODAL_DELETE_BTN = document.getElementById('ModalBtnDelete')
+
+
+
+document.addEventListener('alpine:init', () => {
+    Alpine.store('isShown', {
+        init() {
+            this.isShownSearch = JSON.parse(
+                localStorage.getItem(SHOW_SEHARCH) || 'true')
+            this.isShownExplore = JSON.parse(
+                localStorage.getItem(SHOW_EXPLORE) || 'false')
+            this.isShownFormalizing = JSON.parse(
+                localStorage.getItem(SHOW_FORMALIZING) || 'false')
+            this.isShownSolutions = JSON.parse(
+                localStorage.getItem(SHOW_SOLUTIONS) || 'false')
+            this.isShownEvaluating = JSON.parse(
+                localStorage.getItem(SHOW_EVALUETIONG) || 'false')
+        },
+        toggleIsShown(name) {
+            const varName = name.replace(/[0-9]/g, '')
+            this[varName] = !this[varName]
+            localStorage.setItem(name, this[varName])
+        },
+        data() {
+            return this
+        },
+    })
+})

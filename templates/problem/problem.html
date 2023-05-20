@@ -1,7 +1,10 @@
 {% load static %}
-{#TODO обработка случая с пустым списокм #}
-<main class="" x-data>
-
+<main class="" x-data="$store.isShown.data()">
+  {# навигация по проблеме приклена #}
+  {# при нажатии на секцию прокручивать страницу к ней? #}
+  {# поиск показывается всегда если не скрыт вручную #}
+  {# остальные секции показываеются если есть контент или они не скрыты вручную #}
+  {# если предыдущая секция неимеет контента то последующие отключены #}
   <div class="card">
     <div
         class="card-header d-flex justify-content-between align-items-center sticky-top bg-secondary-subtle">
@@ -58,43 +61,46 @@
           >
             <div class="d-flex justify-content-center">
               <div class="btn-group" role="group">
-                <button type="button" class="btn btn-outline-secondary active"
+                <button type="button" class="btn btn-outline-secondary" :class="isShownSearch && 'active'"
                         data-bs-toggle="collapse"
                         data-bs-target="#searchProblem"
-                        role="button"
-                        aria-expanded="true"
+                        @click="toggleIsShown(SHOW_SEHARCH)"
+                        :aria-expanded="isShownSearch"
                         aria-controls="searchProblem">П
                 </button>
-                <button type="button" class="btn btn-outline-secondary"
+                <button type="button" class="btn btn-outline-secondary" :class="isShownExplore && 'active'"
                         data-bs-toggle="collapse"
                         data-bs-target="#exploreProblem"
-                        role="button"
-                        aria-expanded="false"
+                        @click="toggleIsShown(SHOW_EXPLORE)"
+                        :aria-expanded="isShownExplore"
                         aria-controls="exploreProblem">И
                 </button>
-                <button type="button" class="btn btn-outline-secondary"
+                <button type="button" class="btn btn-outline-secondary" :class="isShownFormalizing && 'active'"
                         data-bs-toggle="collapse"
                         data-bs-target="#formalizingProblem"
-                        role="button"
-                        aria-expanded="false"
+                        @click="toggleIsShown(SHOW_FORMALIZING)"
+                        :aria-expanded="isShownFormalizing"
                         aria-controls="formalizingProblem">О
                 </button>
-                <button type="button" class="btn btn-outline-secondary"
+                <button type="button" class="btn btn-outline-secondary" :class="isShownSolutions && 'active'"
                         data-bs-toggle="collapse"
                         data-bs-target="#solutionProblem"
-                        aria-expanded="false"
+                        @click="toggleIsShown(SHOW_SOLUTIONS)"
+                        :aria-expanded="isShownSolutions"
                         aria-controls="solutionProblem">Р
                 </button>
-                <button type="button" class="btn btn-outline-secondary"
+                <button type="button" class="btn btn-outline-secondary" :class="isShownEvaluating && 'active'"
                         data-bs-toggle="collapse"
                         data-bs-target="#evaluationProblem"
-                        aria-expanded="false"
+                        @click="toggleIsShown(SHOW_EVALUETIONG)"
+                        :aria-expanded="isShownEvaluating"
                         aria-controls="evaluationProblem">О
                 </button>
-                <button type="button" class="btn btn-outline-secondary"
+                <button type="button" class="btn btn-outline-secondary" :class="isShownSearch && 'active'"
                         data-bs-toggle="collapse"
                         data-bs-target="#searchProblem"
-                        aria-expanded="false"
+                        @click="toggleIsShown(SHOW_SEHARCH)"
+                        :aria-expanded="isShownSearch"
                         aria-controls="searchProblem">П
                 </button>
               </div>
@@ -132,7 +138,8 @@
           Закрыть
         </button>
         <button type="button" class="btn btn-danger"
-                data-bs-dismiss="modal" id="ModalBtnDelete">Удалить</button>
+                data-bs-dismiss="modal" id="ModalBtnDelete">Удалить
+        </button>
       </div>
     </div>
   </div>

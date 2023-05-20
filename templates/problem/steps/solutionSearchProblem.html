@@ -1,5 +1,5 @@
 <div id="solutionProblem"
-     class="collapse"
+     class="collapse" :class="isShownEvaluating && 'show'"
      x-data="{
         sota: solutions_search_problem.sota,
         example_solutions: solutions_search_problem.example_solutions,
