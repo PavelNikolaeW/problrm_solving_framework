@@ -5,7 +5,5 @@ WORKDIR problem-solvig
 COPY . ./
 
 RUN pip install -r requirements.txt
-RUN pip install django djangorestframework
-
 
 ENTRYPOINT ./entrypoint.sh

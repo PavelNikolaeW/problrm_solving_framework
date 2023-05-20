@@ -4,12 +4,14 @@ version: '2.2'
 services:
 
   problem-solving:
-    env_file: .env
+    env_file: .env-prod
     build:
       context: .
     networks:
       - nginx_problem-solving-framework
     restart: always
+    volumes:
+      - /root/sqlite3/:/problem-solvig/db.sqlite3
 
 
 networks:
