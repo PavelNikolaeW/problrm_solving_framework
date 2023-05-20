@@ -4,3 +4,6 @@ migrations
 __pycache__
 tmp
 .vscode
+db.sqlite3
+.env
+.env-prod
