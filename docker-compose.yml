@@ -11,7 +11,9 @@ services:
       - nginx_problem-solving-framework
     restart: always
     volumes:
-      - /root/sqlite3/:/problem-solvig/db.sqlite3
+      - /root/sqlite3/:/problem-solvig/db/
+
+
 
 
 networks:
