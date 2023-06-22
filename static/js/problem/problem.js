@@ -9,11 +9,15 @@ document.addEventListener('alpine:init', () => {
                 localStorage.getItem(STORAGE_IS_SHOW_TOOLTIP) || 'true')
             this.showInputParts = JSON.parse(
                 localStorage.getItem(STORAGE_SHOW_INPUT_PARTS) || 'true')
+            this.initShowVars()
         },
         problems: [],
         firstId: null,
         activeProblemId: null,
 
+        data() {
+            return this
+        },
         problemUpdate(id, body) {
             return api.wrapperFetch(`problems/${id}/`, 'PATCH', JSON.stringify(body))
         },
@@ -41,15 +45,15 @@ document.addEventListener('alpine:init', () => {
                     .catch(handleError)
             }
         },
-        openModalDialog(id, text) {
-            const handler = this.getHandlerDeleteProblem(id)
+        openModalDialog() {
+            if (!this.activeProblemId) return
+            const text = this._getProblem(this.activeProblemId).title
+            const handler = this.getHandlerDeleteProblem(this.activeProblemId)
             MODAL_BODY.innerText = `Удалить ${text}?`
             MODAL_DELETE_BTN.addEventListener('click', handler)
             MODAL_DIALOG.addEventListener('hidden.bs.modal', () => {
                 MODAL_DELETE_BTN.removeEventListener('click', handler)
-
             })
-
         },
         _getProblem(id) {
             return this.problems.find(p => p.id == id)
@@ -140,10 +144,68 @@ document.addEventListener('alpine:init', () => {
         },
         // переключение между проблемами
         handleClickOnTabProblem(id) {
+            this.activeProblemId = id
             this.setHeightTextareaProblem(id)
             this.loadChart(id)
-            this.activeProblemId = id
             localStorage.setItem(STORAGE_ACTIV_PROBLEM, id)
+            this.initShowVars()
+        },
+        // переключение видимости секций
+        initShowVars() {
+            LIST_SHOWN_VARS.forEach((nameVar, id) => {
+                const storageVar = LIST_STORAGE_VARS[id]
+                this[storageVar] = `${USER.id}_${this.activeProblemId}_${nameVar}`
+                this[nameVar] = JSON.parse(localStorage.getItem(
+                    this[storageVar]) || (id === 0 ? 'true' : 'false')
+                )
+            })
+            // тут происходит следующие только для вссего списка переменных
+            // this.SHOW_SEARCH = `${USER.id}_${this.activeProblemId}_isShownSearch`
+            // this.isShownSearch = JSON.parse(localStorage.getItem(this.SHOW_SEARCH) || 'true')
+        },
+        // скрол до секции
+        accentSection(sectionID) {
+            const el = document.getElementById(sectionID)
+            const titleSection = el.querySelector('h6>a')
+            el.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+            })
+            titleSection.classList.add("text-primary")
+            setTimeout(() => titleSection.classList.remove("text-primary"), 1000)
+        },
+        // переключатели секций
+        nextSection(el) {
+            const len = LIST_SHOWN_VARS.length - 1
+            for (let i = len; i >= 0; i--) {
+                if (i === len && this[LIST_SHOWN_VARS[i]]) return
+                else if (this[LIST_SHOWN_VARS[i]]) {
+                    const elemIndex = i + 1
+                    const sectionID = `${LIST_SHOWN_VARS[elemIndex].slice(7).toLowerCase()}Section${this.activeProblemId}`
+                    const elCollapse = new bootstrap.Collapse('#' + sectionID, {toggle: false})
+                    elCollapse.show()
+                    this[LIST_SHOWN_VARS[elemIndex]] = !this[LIST_SHOWN_VARS[elemIndex]]
+                    localStorage.setItem(this[LIST_STORAGE_VARS[elemIndex]], this[LIST_SHOWN_VARS[elemIndex]])
+                    return setTimeout(() => {
+                        el.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                        })
+                    }, 200)
+                }
+            }
+        },
+        prevSection() {
+            const len = LIST_SHOWN_VARS.length - 1
+            for (let i = len; i > 0; i--) {
+                if (this[LIST_SHOWN_VARS[i]]) {
+                    const sectionID = `#${LIST_SHOWN_VARS[i].slice(7).toLowerCase()}Section${this.activeProblemId}`
+                    const elCollapse = new bootstrap.Collapse(sectionID, {toggle: false})
+                    elCollapse.hide()
+                    this[LIST_SHOWN_VARS[i]] = !this[LIST_SHOWN_VARS[i]]
+                    return localStorage.setItem(this[LIST_STORAGE_VARS[i]], this[LIST_SHOWN_VARS[i]])
+                }
+            }
         },
         // загрузка \ обновление графиков
         loadChart(id) {
@@ -331,29 +393,3 @@ const MODAL_DIALOG = document.getElementById('modalDialog')
 const MODAL_BODY = document.getElementById('modalBody')
 const MODAL_DELETE_BTN = document.getElementById('ModalBtnDelete')
 
-
-
-document.addEventListener('alpine:init', () => {
-    Alpine.store('isShown', {
-        init() {
-            this.isShownSearch = JSON.parse(
-                localStorage.getItem(SHOW_SEHARCH) || 'true')
-            this.isShownExplore = JSON.parse(
-                localStorage.getItem(SHOW_EXPLORE) || 'false')
-            this.isShownFormalizing = JSON.parse(
-                localStorage.getItem(SHOW_FORMALIZING) || 'false')
-            this.isShownSolutions = JSON.parse(
-                localStorage.getItem(SHOW_SOLUTIONS) || 'false')
-            this.isShownEvaluating = JSON.parse(
-                localStorage.getItem(SHOW_EVALUETIONG) || 'false')
-        },
-        toggleIsShown(name) {
-            const varName = name.replace(/[0-9]/g, '')
-            this[varName] = !this[varName]
-            localStorage.setItem(name, this[varName])
-        },
-        data() {
-            return this
-        },
-    })
-})

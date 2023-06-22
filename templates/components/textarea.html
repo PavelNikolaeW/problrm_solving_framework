@@ -1,15 +1,15 @@
 <div class="mb-4 {{ class }}">
-  <div class="form-floating border rounded {{ class_form }}">
+  <div class="form-floating border rounded shadow-sm {{ class_form }}">
         <textarea class="form-control form-control-plaintext cursor-pointer"
                   x-model="{{ model }}"
                   @change="{{ change }}"
-                  @input="$store.problem.setHeightTextarea($el)"
+                  @input="setHeightTextarea($el)"
                   :id="{{ id }} + id"
         ></textarea>
     <label for="floatingTextarea">{{ label }}</label>
   </div>
   <div class="form-text"
-       x-show="$store.problem.showTooltip"
+       x-show="showTooltip"
        x-transition>{{ tooltip }}
   </div>
 </div>

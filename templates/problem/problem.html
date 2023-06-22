@@ -1,18 +1,19 @@
 {% load static %}
-<main class="" x-data="$store.isShown.data()">
+<main class="" x-data="$store.problem.data()">
+
+
   {# навигация по проблеме приклена #}
-  {# при нажатии на секцию прокручивать страницу к ней? #}
-  {# поиск показывается всегда если не скрыт вручную #}
   {# остальные секции показываеются если есть контент или они не скрыты вручную #}
   {# если предыдущая секция неимеет контента то последующие отключены #}
-  <div class="card">
+  <div class="card shadow">
     <div
-        class="card-header d-flex justify-content-between align-items-center sticky-top bg-secondary-subtle">
+        class="card-header d-flex justify-content-between align-items-center sticky-top bg-secondary-subtle"
+        x-ref="cardHeaderRef">
       <ul class="nav nav-tabs card-header-tabs "
           role="tablist">
-        <template x-for="{title, id} in $store.problem.problems" :key="id">
+        <template x-for="{title, id} in problems" :key="id">
           <li class="nav-item">
-            <button class="nav-link" :class="$store.problem.isActiveButton(id)"
+            <button class="nav-link px-1 px-sm-2 px-md-3" :class="$store.problem.isActiveButton(id)"
                     x-text="title"
                     @click="$store.problem.handleClickOnTabProblem(id)"
                     :id="'tab-' + id"
@@ -25,87 +26,67 @@
           </li>
         </template>
         <li class="nav-item">
-          <button class="nav-link" :class="!$store.problem.firstId && 'active'"
+          <button class="nav-link px-1 px-sm-2 px-md-3" :class="!firstId && 'active'"
                   id="tab-new"
                   data-bs-toggle="tab"
                   data-bs-target="#new-problem"
+                  @click="activeProblemId = null"
                   type="button"
                   role="tab"
                   aria-controls="new-problem"
-                  :aria-selected="!$store.problem.problems.length">+
+                  :aria-selected="problems.length">+
           </button>
         </li>
       </ul>
-      <div class="form-check form-switch "
-           @change="$store.problem.tooltipToggle()">
+      <div class="form-check form-switch">
         <input class="form-check-input cursor-pointer"
                type="checkbox"
                :checked="$store.problem.showTooltip"
+               @click="$store.problem.tooltipToggle()"
                id="showTooltip"
                data-bs-trigger="hover"
                data-bs-toggle="tooltip"
                data-bs-custom-class="tooltip-switch"
                data-bs-title="включить подсказки на формах">
       </div>
+      <div x-show="activeProblemId !== null"
+           class="position-absolute border-bottom shadow-sm"
+           :style="$store.problem.getTogglerBarStyle($refs.cardHeaderRef)">
+        <div class="d-flex justify-content-between align-items-center h-100">
+          <div class="btn-group ps-2" style="gap: 3px;" role="group">
+            <template x-for="nameVar in LIST_SHOWN_VARS">
+              <button type="button" class="btn btn-outline-primary border-secondary"
+                      :class="$store.problem[nameVar] && 'active border-0'"
+                      @click="accentSection(`${nameVar.slice(7).toLowerCase()}Section${activeProblemId}`)">
+              </button>
+            </template>
+          </div>
+          <button type="button"
+                  class="btn p-0 pe-2 pb-1 text-danger"
+                  aria-label="Delete"
+                  data-bs-toggle="modal"
+                  data-bs-target="#modalDialog"
+                  @click="openModalDialog()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                 class="bi bi-trash3" viewBox="0 0 16 16">
+              <path
+                  d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
     </div>
 
-    <div class="card-body">
+    <div class="card-body" :class="activeProblemId !== null && 'mt-4'">
       <div class="tab-content">
         <template
-            x-for="{title, id, solutions, criterion, todos, search_problem, explore_problem, formalizing_problem, solutions_search_problem, evaluation_solution_problem} in $store.problem.problems"
+            x-for="{title, id, solutions, criterion, todos, search_problem, explore_problem, formalizing_problem, solutions_search_problem, evaluation_solution_problem} in problems"
             :key="id">
-          <div class="tab-pane fade" :class="$store.problem.isActiveTab(id)"
+          <div class="tab-pane fade" :class="isActiveTab(id)"
                :id="'content' + id"
                role="tabpanel"
                :aria-labelledby="'content' + id"
           >
-            <div class="d-flex justify-content-center">
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-outline-secondary" :class="isShownSearch && 'active'"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#searchProblem"
-                        @click="toggleIsShown(SHOW_SEHARCH)"
-                        :aria-expanded="isShownSearch"
-                        aria-controls="searchProblem">П
-                </button>
-                <button type="button" class="btn btn-outline-secondary" :class="isShownExplore && 'active'"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#exploreProblem"
-                        @click="toggleIsShown(SHOW_EXPLORE)"
-                        :aria-expanded="isShownExplore"
-                        aria-controls="exploreProblem">И
-                </button>
-                <button type="button" class="btn btn-outline-secondary" :class="isShownFormalizing && 'active'"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#formalizingProblem"
-                        @click="toggleIsShown(SHOW_FORMALIZING)"
-                        :aria-expanded="isShownFormalizing"
-                        aria-controls="formalizingProblem">О
-                </button>
-                <button type="button" class="btn btn-outline-secondary" :class="isShownSolutions && 'active'"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#solutionProblem"
-                        @click="toggleIsShown(SHOW_SOLUTIONS)"
-                        :aria-expanded="isShownSolutions"
-                        aria-controls="solutionProblem">Р
-                </button>
-                <button type="button" class="btn btn-outline-secondary" :class="isShownEvaluating && 'active'"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#evaluationProblem"
-                        @click="toggleIsShown(SHOW_EVALUETIONG)"
-                        :aria-expanded="isShownEvaluating"
-                        aria-controls="evaluationProblem">О
-                </button>
-                <button type="button" class="btn btn-outline-secondary" :class="isShownSearch && 'active'"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#searchProblem"
-                        @click="toggleIsShown(SHOW_SEHARCH)"
-                        :aria-expanded="isShownSearch"
-                        aria-controls="searchProblem">П
-                </button>
-              </div>
-            </div>
-            <hr>
             {########### КАРТОЧКА ПРОБЛЕМЫ ###########}
             {% include 'problem/steps/searchProblem.html' %}
             {% include 'problem/steps/exploreProblem.html' %}
@@ -119,6 +100,18 @@
         {% include 'problem/newProblem.html' %}
 
       </div>
+      <div class="d-flex flex-row gap-3 justify-content-around">
+        <button class="btn rounded-pill btn-outline-primary text-danger"
+                @click="prevSection()"
+                type="button">↑
+        </button>
+        <button class="btn rounded-pill btn-outline-primary text-danger"
+                @click="nextSection($el)"
+                type="button">↓
+        </button>
+      </div>
+    </div>
+    <div class="card-footer" style="min-height: 23px">
     </div>
   </div>
 </main>

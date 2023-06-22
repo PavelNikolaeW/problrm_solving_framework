@@ -40,17 +40,21 @@ async function loadFromServer(key) {
 const l = (value) => console.log(value)
 
 const STORAGE_ACTIV_PROBLEM = USER.id + 'activeProblemId'
-const STORAGE_IS_SHOW_TOOLTIP = USER.id + 'tooltip'
-const STORAGE_SHOW_INPUT_PARTS = USER.id + 'showInputParts'
-const STORAGE_SHOW_INPUT_PREF = USER.id + 'showInputPreferences'
-const STORAGE_SHOW_INPUT_REQ = USER.id + 'showInputRequirements'
-const STORAGE_SHOW_INPUT_SOL = USER.id + 'showInputSolutionSearch'
+const STORAGE_IS_SHOW_TOOLTIP = USER.id + 'isShownTooltip'
+const STORAGE_SHOW_INPUT_PARTS = USER.id + 'shownInputParts'
+const STORAGE_SHOW_INPUT_PREF = USER.id + 'shownInputPreferences'
+const STORAGE_SHOW_INPUT_REQ = USER.id + 'shownInputRequirements'
+const STORAGE_SHOW_INPUT_SOL = USER.id + 'shownInputSolutionSearch'
 
-const SHOW_SEHARCH = USER.id + 'isShownSearch'
-const SHOW_EXPLORE = USER.id + 'isShownExplore'
-const SHOW_FORMALIZING = USER.id + 'isShownFormalizing'
-const SHOW_SOLUTIONS = USER.id + 'isShownSolutions'
-const SHOW_EVALUETIONG = USER.id + 'isShownEvaluating'
+const LIST_SHOWN_VARS = [
+    'isShownSearch',
+    'isShownExplore',
+    'isShownFormalizing',
+    'isShownSolutions',
+    'isShownEvaluating',
+]
+console.log('isShownSearch'.slice(7,).toLowerCase())
+const LIST_STORAGE_VARS = LIST_SHOWN_VARS.map(elem => 'SHOW_' + elem.slice(7,).toUpperCase())
 
 const NEW_TAB = 'tab-new'
 const HOST = location.origin

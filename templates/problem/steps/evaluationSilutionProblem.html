@@ -1,4 +1,4 @@
-<div id="evaluationProblem"
+<div :id="'evaluatingSection'+id"
      class="collapse" :class="isShownEvaluating && 'show'"
      x-data="{
          criteria_opinion: evaluation_solution_problem.criteria_opinion
@@ -10,7 +10,7 @@
       tooltip="У нас есть какое-то количество возможных решений. Нужно теперь выбрать. Для этого составляем критерии и примерно представляем себе треки для топовых вариантов (ведь надо выбирать с учётом трека/затрат). Оцениваем и выбираем по критериям!"
       only
     %}
-    <ul class="list-group">
+    <ul class="list-group shadow-sm">
       <li class="list-group-item d-flex justify-content-between">
         <span class="lead text-secondary">Шаги</span>
         <div class="btn-group dropup">
@@ -26,7 +26,7 @@
               <li class="dropdown-item cursor-pointer"
                   :class="solution.settings?.dropActiv && 'text-bg-secondary'"
                   x-ref="solDropItem"
-                  @click="$store.problem.changeSettingsSolution(solution, 'dropActiv')"
+                  @click="changeSettingsSolution(solution, 'dropActiv')"
                   x-text="solution.title"></li>
             </template>
           </ul>
@@ -42,9 +42,9 @@
                 <li class="list-group-item d-flex align-items-center gap-1 gap-sm-3 p-0 pb-1 border-0">
                   <input class="form-control form-control-plaintext cursor-pointer p-0"
                          x-model="solution.steps[indexStep]"
-                         @change="$store.problem.solutionUpdate(solution)">
+                         @change="solutionUpdate(solution)">
                   <button type="button" class="btn-close" aria-label="Close"
-                          @click="$store.problem.deleteStepSolution(solution, indexStep)"></button>
+                          @click="deleteStepSolution(solution, indexStep)"></button>
                 </li>
               </template>
               <li class="list-group-item d-flex align-items-center gap-1 gap-sm-3 p-0">
@@ -52,7 +52,7 @@
                        x-model="newStep"
                        x-ref="newStepRef"
                        placeholder="?"
-                       @change="$store.problem.addStepSolution(newStep, solution, $refs.newStepRef)">
+                       @change="addStepSolution(newStep, solution, $refs.newStepRef)">
               </li>
             </ul>
           </li>
@@ -60,7 +60,7 @@
       </template>
     </ul>
     <div class="form-text"
-         x-show="$store.problem.showTooltip"
+         x-show="showTooltip"
          x-transition>Представьте какие шаги нужно совершить в реалистичных вариантах.
     </div>
   </div>
@@ -72,7 +72,7 @@
       class='mb-2'
       only
     %}
-    <div class="table-responsive border rounded-3">
+    <div class="table-responsive border rounded-3 shadow-sm">
       <table class="table table-striped table-hover "
              x-data="{newCrit: {title: null, weight: 0, problem_id: id}}">
         <thead>
@@ -91,7 +91,7 @@
                   <li class="dropdown-item cursor-pointer d-flex justify-content-between"
                       :class="solution.settings?.tableActiv && 'text-bg-secondary'"
                       x-ref="solDropItem"
-                      @click="$store.problem.changeSettingsSolution(solution, 'tableActiv')">
+                      @click="changeSettingsSolution(solution, 'tableActiv')">
                     <span x-text="solution.title"></span>
                     <template x-if="solution.steps.length">
                       <span class="badge bg-secondary rounded-pill"
@@ -106,7 +106,7 @@
             <th scope="col" style="min-width: 70px;">
               <input class="form-control form-control-plaintext cursor-pointer"
                      x-model="critery.title"
-                     @change="$store.problem.criteryUpdate(critery)">
+                     @change="criteryUpdate(critery)">
             </th>
           </template>
           <th scope="col" class="lead border-start">Итог</th>
@@ -125,12 +125,12 @@
                   <input class="form-control form-control-plaintext cursor-pointer"
                          type="number"
                          x-model="solution.weight_critery[critery.id]"
-                         @change="$store.problem.solutionUpdate(solution)">
+                         @change="solutionUpdate(solution)">
                 </td>
               </template>
               <td class="border-start"
                   x-model="solution.weight_critery"
-                  x-text="$store.problem.getSumm(solution, criterion)"></td>
+                  x-text="getSumm(solution, criterion)"></td>
             </tr>
           </template>
         </template>
@@ -148,14 +148,14 @@
               <input class="form-control form-control-plaintext cursor-pointer"
                      type="number"
                      x-model="critery.weight"
-                     @change="$store.problem.criteryUpdate(critery)">
+                     @change="criteryUpdate(critery)">
             </td>
           </template>
           <td class="border-start">
             <input class="form-control form-control-plaintext cursor-pointer"
                    placeholder="Новый критерий"
                    x-ref="newCritRef"
-                   @change="$store.problem.newCritery(newCrit, criterion, $refs.newCritRef)"
+                   @change="newCritery(newCrit, criterion, $refs.newCritRef)"
                    x-model="newCrit.title">
           </td>
         </tr>
