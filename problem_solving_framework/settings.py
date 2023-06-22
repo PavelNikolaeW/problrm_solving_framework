@@ -36,6 +36,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
 DEBUG = os.environ.get('DEBUG')
+print(f"{DEBUG=}")
 
 ALLOWED_HOSTS = [
     "problem-solving",
@@ -102,7 +103,7 @@ WSGI_APPLICATION = 'problem_solving_framework.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db' / 'db.sqlite3',
     }
 }
 

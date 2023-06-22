@@ -6,6 +6,10 @@
 /*    background-color: var(--bs-secondary-bg-subtle);*/
 /*}*/
 
+.close-danger {
+    --bs-btn-close-color: rgb(220, 53, 69);
+}
+
 
 textarea {
     resize: none;

@@ -165,7 +165,7 @@ class ProblemTitleSerializer(ModelSerializer):
 
 
 class TodoListSerializer(ModelSerializer):
-    problem = ProblemTitleSerializer(required=False)
+    problem = SerializerMethodField()
     category = SerializerMethodField()
 
     def validate(self, attrs):
@@ -188,10 +188,10 @@ class TodoListSerializer(ModelSerializer):
         instance.save()
         return instance
 
-    # def get_problem(self, obj):
-    #     if not obj.problem:
-    #         return {}
-    #     return ProblemTitleSerializer(obj.problem).data
+    def get_problem(self, obj):
+        if not obj.problem:
+            return {}
+        return ProblemTitleSerializer(obj.problem).data
 
     def get_category(self, obj):
         if not obj.category:

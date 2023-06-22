@@ -46,7 +46,12 @@ def query_debugger(func):
     return inner_func
 
 
+def technical_maintenance(request):
+    return render(request, 'tech_worck.html')
+
+
 def index(request):
+    # return redirect('problem_solving:technical_maintenance')
     if not request.user.is_authenticated:
         return redirect('problem_solving:about_us')
     return render(request, 'index.html')
@@ -61,3 +66,7 @@ def todo(request):
     if not request.user.is_authenticated:
         return redirect('problem_solving:about_us')
     return render(request, 'todo/main-todo.html')
+
+
+def byaes(request):
+    return render(request, 'byaes.html')
