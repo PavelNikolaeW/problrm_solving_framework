@@ -1,3 +1,5 @@
+import datetime
+
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils import timezone
@@ -170,6 +172,59 @@ class EvaluationSolutionsProblem(models.Model):
 
     def __str__(self):
         return f"{self.pk}"[0:20]
+
+
+class Metrics(models.Model):
+    scale = models.ForeignKey('Scales', on_delete=models.CASCADE)
+    value = models.SmallIntegerField(blank=True, null=True)
+    datetime = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ['-datetime']
+
+    def __str__(self):
+        return f'{self.scale.title} {self.datetime.hour} {self.value}'
+
+
+class Scales(models.Model):
+    observer = models.ForeignKey('Observer', on_delete=models.CASCADE)
+    title = models.CharField(max_length=100, help_text='То что измеряем')
+    description = models.TextField(blank=True, null=True, help_text='Описание шкалы')
+    type = models.CharField(max_length=10, default='range', help_text='тип шкалы')
+
+    def __str__(self):
+        return self.title
+
+
+class Observer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.PROTECT, default=1)
+    nik = models.CharField(max_length=256, help_text='Ник в телеграмме', db_index=True)
+    interval = models.IntegerField(default=3600,
+                                   help_text='интервал через который будут приходить напоминания')
+    start_time = models.DateTimeField(default=datetime.datetime.strptime('7:15:00', '%H:%M:%S'),
+                                      help_text='начало оповещений')
+    end_time = models.DateTimeField(default=datetime.datetime.strptime('22:15:00', '%H:%M:%S'),
+                                    help_text='конец оповещений')
+    end_date = models.DateTimeField(default=datetime.datetime.now() + datetime.timedelta(weeks=104))
+    days_of_week = models.JSONField(default=[0, 1, 2, 3, 4, 5, 6],
+                                    help_text="Дни когда работают оповещения")
+    is_active = models.BooleanField(default=True, help_text='Включены оповешения или нет')
+    chat_id = models.BigIntegerField(null=True, blank=True, help_text='идентификатор чата в телеге')
+
+    def __str__(self):
+        return self.nik
+
+
+class Post(models.Model):
+    text = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.text[:15]
+
+    class Meta:
+        ordering = ['-created']
 
 
 PROBLEM_MODELS = {

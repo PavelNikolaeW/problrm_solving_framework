@@ -159,7 +159,7 @@ document.addEventListener('alpine:init', () => {
                     this[storageVar]) || (id === 0 ? 'true' : 'false')
                 )
             })
-            // тут происходит следующие только для вссего списка переменных
+            // тут происходит следующие, только для вссего списка переменных
             // this.SHOW_SEARCH = `${USER.id}_${this.activeProblemId}_isShownSearch`
             // this.isShownSearch = JSON.parse(localStorage.getItem(this.SHOW_SEARCH) || 'true')
         },
@@ -173,6 +173,11 @@ document.addEventListener('alpine:init', () => {
             })
             titleSection.classList.add("text-primary")
             setTimeout(() => titleSection.classList.remove("text-primary"), 1000)
+        },
+        getTogglerBarStyle(el) {
+            console.dir(el)
+            console.log(el.width)
+            return `width: ${el.clientWidth}px; height: 26px; background-color: #ffffff;  bottom: -27px; left:0`
         },
         // переключатели секций
         nextSection(el) {

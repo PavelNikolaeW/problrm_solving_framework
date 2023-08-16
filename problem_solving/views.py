@@ -1,18 +1,25 @@
+
 from django.shortcuts import render, get_object_or_404
 
 from api.serializers import ProblemSerializer
 from .models import (Problem, Category, TodoList)
 from django.contrib.auth import get_user_model
-
 from django.db import connection, reset_queries
 import time
 import functools
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from .forms import CreationForm
+from .tasks import test_task
 from django.shortcuts import redirect
 
 User = get_user_model()
+
+
+def notification(request, ):
+    print("Notification")
+    test_task.apply_async(args=['kek', 'lol'], countdown=24 * 60 * 60)
+    return redirect('problem_solving:index')
 
 
 class SignUp(CreateView):
@@ -48,6 +55,10 @@ def query_debugger(func):
 
 def technical_maintenance(request):
     return render(request, 'tech_worck.html')
+
+
+def observation(request):
+    return render(request, 'observation/observation.html')
 
 
 def index(request):

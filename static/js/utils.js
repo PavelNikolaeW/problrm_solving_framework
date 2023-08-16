@@ -53,7 +53,6 @@ const LIST_SHOWN_VARS = [
     'isShownSolutions',
     'isShownEvaluating',
 ]
-console.log('isShownSearch'.slice(7,).toLowerCase())
 const LIST_STORAGE_VARS = LIST_SHOWN_VARS.map(elem => 'SHOW_' + elem.slice(7,).toUpperCase())
 
 const NEW_TAB = 'tab-new'

@@ -1,20 +1,57 @@
-# Use postgres/example user/password credentials
 version: '2.2'
 
 services:
 
   problem-solving:
     env_file: .env-prod
+    depends_on:
+      - pgdb
+      - redis
+      - celery
     build:
       context: .
     networks:
       - nginx_problem-solving-framework
+      - default
     restart: always
     volumes:
-      - /root/sqlite3/:/problem-solvig/db/
+      - .:/usr/src/app
+
+  celery:
+    env_file: .env-prod
+    depends_on:
+      - pgdb
+      - redis
+    build:
+      context: .
+    networks:
+      - nginx_problem-solving-framework
+      - default
+    restart: always
+    volumes:
+      - .:/usr/src/app
+    command: celery -A problem_solving_framework worker --loglevel=info
+
+  redis:
+    image: redis:latest
+    networks:
+      - default
+
+  pgdb:
+    image: postgres
+    environment:
+      - POSTGRES_DB=$POSTGRES_NAME
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASS
+    container_name: pgdb
+    networks:
+      - default
+    volumes:
+      - pgdbdata:/var/lib/postgresql/data/
 
 
-
+volumes:
+  pgdbdata: null
 
 networks:
   nginx_problem-solving-framework:

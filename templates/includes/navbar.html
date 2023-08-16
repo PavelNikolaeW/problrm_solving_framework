@@ -33,6 +33,10 @@
                    aria-current="page" href="{% url 'problem_solving:index' %}">Главная</a>
               </li>
               <li class="nav-item">
+                <a class="nav-link {{ 'problem_solving:observation'|activate_if_matched:view_name }}"
+                   aria-current="page" href="{% url 'problem_solving:observation' %}">Наблюдения</a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link {{ 'problem_solving:byaes'|activate_if_matched:view_name }}"
                    aria-current="page" href="{% url 'problem_solving:byaes' %}">Вероятности</a>
               </li>

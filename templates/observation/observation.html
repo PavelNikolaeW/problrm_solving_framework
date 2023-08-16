@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  {% load custom_filters %}
+
+  <div class="d-flex flex-column gap-4" x-data="$store.observer.data()">
+    {% if user.observer_set.first %}
+      {% include 'observation/charts.html' %}
+    {% endif %}
+
+    {% if not user.observer_set.first %}
+      <p>
+        Что бы определить в какое время суток у вас больше всего сил, что повышает вам настроение, а
+        что понижает, необходимо пронаблюдать за собой.
+        Для этого подключите телеграмм <a href="https://t.me/my_todo_862_bot">бота</a> Что бы бот
+        узнал вас, ведите в форму ниже имя пользователя в телегрмме.
+        (то что начинается со знака @)Так же придумайте то зачем вы хотите наблюдать (настроение,
+        бодрость) и дела которые должны влиять на это (зарядка, кофе). Все это можно
+        отредактировать как на сайте, так и в боте.
+      </p>
+    {% endif %}
+    {% include 'observation/add_scale_and_trigger.html' %}
+  </div>
+
+  {#      <canvas class="border rounded shadow-sm" id="test"></canvas>#}
+  <p class="d-flex justify-content-around p-3"><a href="https://t.me/my_todo_862_bot">Бот тут</a>
+  </p>
+
+  {% include 'observation/modal_scale.html' %}
+  <script type="text/javascript" src="{% static 'js/observation/observation.js' %}"></script>
+
+{% endblock %}

@@ -10,8 +10,29 @@ from .models import (
     ExploreProblem,
     FormalizingProblem,
     SolutionSearchProblem,
-    EvaluationSolutionsProblem
+    EvaluationSolutionsProblem,
+    Observer,
+    Scales,
+    Metrics
 )
+
+
+class ObserverAdmin(admin.ModelAdmin):
+    list_display = (
+        'id', 'user', 'nik', 'interval'
+    )
+
+
+class ScalesAdmin(admin.ModelAdmin):
+    list_display = (
+        'id', 'observer', 'title', 'description'
+    )
+
+
+class MetricsAdmin(admin.ModelAdmin):
+    list_display = (
+        'id', 'scale', 'value', 'datetime'
+    )
 
 
 class CriteryAdmin(admin.ModelAdmin):
@@ -70,7 +91,8 @@ class EvaluationSolutionsProblemAdmin(admin.ModelAdmin):
 
 class TodoListAdmin(admin.ModelAdmin):
     list_display = (
-        "id", "author", "title", "content", "created", "due_date", "category", "problem", "completed"
+        "id", "author", "title", "content", "created", "due_date", "category", "problem",
+        "completed"
     )
 
 
@@ -90,3 +112,6 @@ admin.site.register(SolutionSearchProblem, SolutionSearchProblemAdmin)
 admin.site.register(EvaluationSolutionsProblem, EvaluationSolutionsProblemAdmin)
 admin.site.register(TodoList, TodoListAdmin)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(Observer, ObserverAdmin)
+admin.site.register(Metrics, MetricsAdmin)
+admin.site.register(Scales, ScalesAdmin)

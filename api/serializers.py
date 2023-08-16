@@ -1,4 +1,7 @@
-from rest_framework.exceptions import ValidationError
+from datetime import timedelta, datetime
+
+from rest_framework.exceptions import ValidationError, ParseError
+from rest_framework.generics import get_object_or_404
 from rest_framework.serializers import Serializer, ModelSerializer, CharField, SerializerMethodField
 
 from problem_solving.models import (User, Problem, Category, TodoList,
@@ -8,7 +11,22 @@ from problem_solving.models import (User, Problem, Category, TodoList,
                                     SolutionSearchProblem,
                                     EvaluationSolutionsProblem,
                                     PROBLEM_MODELS,
-                                    EXPLORE_CATEGORY, Solution, Critery)
+                                    EXPLORE_CATEGORY, Solution, Critery, Observer, Metrics, Scales,
+                                    Post)
+from problem_solving_framework.settings import TIME_ZONE
+
+
+class UserSerializer(ModelSerializer):
+    auth_token = SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = '__all__'
+
+    def get_auth_token(self, obj):
+        if hasattr(obj, 'auth_token'):
+            return str(obj.auth_token)
+        return None
 
 
 class SearchProblemSerializer(ModelSerializer):
@@ -24,7 +42,6 @@ class TodoExploreSerializer(ModelSerializer):
 
 
 class ExploreProblemSerializer(ModelSerializer):
-
     class Meta:
         model = ExploreProblem
         fields = ("cause_and_effect", "problem_parts", "identify")
@@ -204,3 +221,100 @@ class TodoListSerializer(ModelSerializer):
                   "category",
                   "problem",
                   "completed")
+
+
+class MetricSerializer(ModelSerializer):
+    hour = SerializerMethodField()
+
+    class Meta:
+        model = Metrics
+        fields = ('id', 'value', 'hour', 'datetime')
+
+    def get_hour(self, obj):
+        if hasattr(obj, 'datetime'):
+            time = obj.datetime + timedelta(hours=3)
+            return time.hour
+        return ''
+
+    def create(self, validated_data):
+        scale_id = self.context.get('view').kwargs.get('scale_id')
+        user = self.context.get('request').user
+        authenticator = self.context.get('request').successful_authenticator
+        if authenticator.__class__.__name__ == 'TokenAuthentication':
+            scale = get_object_or_404(Scales, id=scale_id)
+        else:
+            scale = get_object_or_404(Scales, id=scale_id, observer__user_id=user.id)
+        metric = Metrics(scale=scale, **validated_data)
+        metric.save()
+        return metric
+
+
+class ScaleSerializer(ModelSerializer):
+    metrics = MetricSerializer(required=False, source='metrics_set', many=True)
+
+    class Meta:
+        model = Scales
+        fields = ('id', 'title', 'description', 'type', 'metrics')
+
+    def create(self, validated_data):
+        user = self.context.get('request').user
+        obs = Observer.objects.get(user_id=user.id)
+        validated_data.pop('metrics_set', None)
+        scale = Scales(observer=obs, **validated_data)
+        scale.save()
+        return scale
+
+    def update(self, instance, validated_data):
+        validated_data.pop('id', None)
+        validated_data.pop('metrics_set', None)
+        for name, value in validated_data.items():
+            if hasattr(instance, name):
+                setattr(instance, name, value)
+        instance.save()
+        return instance
+
+
+class ObserverSerializer(ModelSerializer):
+    scales = ScaleSerializer(required=False, source='scales_set', many=True)
+
+    class Meta:
+        model = Observer
+        fields = ("id", "user", 'chat_id', "nik", 'interval', 'is_active', 'scales')
+
+
+class ScaleIdSerializer(ModelSerializer):
+    class Meta:
+        model = Scales
+        fields = ('id', 'title', 'type', 'description')
+
+
+class ObserverDataSerializer(ModelSerializer):
+    scales = ScaleIdSerializer(required=False, source='scales_set', many=True)
+    start = SerializerMethodField()
+    end = SerializerMethodField()
+    end_date_notify = SerializerMethodField()
+    time_zone = SerializerMethodField()
+
+    class Meta:
+        model = Observer
+        fields = (
+            "id", "nik", 'time_zone', 'start', 'end', 'end_date_notify', 'days_of_week', 'interval',
+            'is_active', 'chat_id', "user", 'scales',)
+
+    def get_start(self, obj):
+        return str(obj.start_time.astimezone())[11:19]
+
+    def get_end(self, obj):
+        return str(obj.end_time.astimezone())[11:19]
+
+    def get_end_date_notify(self, obj):
+        return str(obj.end_date)[0:10]
+
+    def get_time_zone(self, obj):
+        return TIME_ZONE
+
+
+class PostSerializer(ModelSerializer):
+    class Meta:
+        model = Post
+        fields = '__all__'

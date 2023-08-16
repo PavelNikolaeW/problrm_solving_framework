@@ -49,7 +49,7 @@
                data-bs-custom-class="tooltip-switch"
                data-bs-title="включить подсказки на формах">
       </div>
-      <div x-show="activeProblemId !== null"
+      <div x-show="activeProblemId !== null && problems.length > 0"
            class="position-absolute border-bottom shadow-sm"
            :style="$store.problem.getTogglerBarStyle($refs.cardHeaderRef)">
         <div class="d-flex justify-content-between align-items-center h-100">

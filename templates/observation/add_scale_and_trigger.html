@@ -1,0 +1,42 @@
+<div class="row pt-3">
+  <p class="form-label">Имя пользователя</p>
+  <div class="col-8">
+    <input class="form-control" placeholder="@nikname" type="text">
+  </div>
+  <button class="col-4 btn btn-outline-secondary">Сохранить</button>
+</div>
+
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+          aria-expanded="false">
+    шаклы
+  </button>
+  <ul class="dropdown-menu">
+    <template x-for="scale in $store.observer.scales">
+      <template x-if="scale.type === 'range'">
+        <a href="#"
+           class="dropdown-item"
+           data-bs-toggle="modal"
+           data-bs-target="scaleModal"
+           x-text="scale.title"
+           @click="openModalDialog()">
+        </a>
+      </template>
+    </template>
+  </ul>
+</div>
+
+
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+          aria-expanded="false">
+    триггеры
+  </button>
+  <ul class="dropdown-menu">
+    <template x-for="scale in $store.observer.scales">
+      <template x-if="scale.type === 'bool'">
+        <li><a class="dropdown-item" href="#" x-text="scale.title"></a></li>
+      </template>
+    </template>
+  </ul>
+</div>

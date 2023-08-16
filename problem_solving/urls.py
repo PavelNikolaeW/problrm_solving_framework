@@ -11,4 +11,7 @@ urlpatterns = [
     path('registration/', views.SignUp.as_view(), name='registration'),
     path('byaes/', views.byaes, name='byaes'),
     path('technical_maintenance/', views.technical_maintenance, name='technical_maintenance'),
+    path('observation/', views.observation, name='observation'),
+    path('notifications/', views.notification, name='notifications'),
+
 ]

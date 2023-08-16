@@ -16,8 +16,8 @@ from dotenv import load_dotenv
 # включаю возможность создавать многострочные теги в шаблонах
 import re
 from django.template import base
-base.tag_re = re.compile(base.tag_re.pattern, re.DOTALL)
 
+base.tag_re = re.compile(base.tag_re.pattern, re.DOTALL)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,6 +39,7 @@ DEBUG = os.environ.get('DEBUG')
 print(f"{DEBUG=}")
 
 ALLOWED_HOSTS = [
+    'problem-solving-framework.ru',
     "problem-solving",
     'localhost', '127.0.0.1',
 ]
@@ -55,8 +56,10 @@ INSTALLED_APPS = [
     'problem_solving.apps.ProblemSolvingConfig',
     'api',
     'rest_framework',
+    'rest_framework.authtoken',
     'django_extensions',
     'django_filters',
+    'django.contrib.postgres',
     # 'django.contrib.sites',
     # 'account',
 ]
@@ -103,8 +106,17 @@ WSGI_APPLICATION = 'problem_solving_framework.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db' / 'db.sqlite3',
+        'NAME': 'db.sqlite3',
+        # 'NAME': BASE_DIR / 'db' / 'db.sqlite3',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': os.environ.get("POSTGRES_NAME"),
+    #     'USER': os.environ.get("POSTGRES_USER"),
+    #     'PASSWORD': os.environ.get("POSTGRES_PASS"),
+    #     'HOST': 'pgdb',
+    #     'PORT': '5432',
+    # }
 }
 
 # Password validation
@@ -130,7 +142,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -150,31 +162,51 @@ STATICFILES_DIRS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': [
+    'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.OrderingFilter'
-    ],
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',
-    #     'problem_solving.permissions.IsOwner',
-    # ],
-
-    # 'DEFAULT_AUTHENTICATION_CLASSES': (
-    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
-    # ),
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication'
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'PAGE_SIZE': 10,
 }
 # LOGGING = {
 #     'version': 1,
+#     'filters': {
+#         'require_debug_true': {
+#             '()': 'django.utils.log.RequireDebugTrue',
+#         }
+#     },
 #     'handlers': {
-#         'console': {'class': 'logging.StreamHandler',}
+#         'console': {
+#             'level': 'DEBUG',
+#             'filters': ['require_debug_true'],
+#             'class': 'logging.StreamHandler',
+#         }
 #     },
 #     'loggers': {
 #         'django.db.backends': {
-#             'handlers': ['console'],
 #             'level': 'DEBUG',
+#             'handlers': ['console'],
 #         }
 #     }
 # }
+
+
+CELERY_BROKER_URL = 'redis://redis:6379'
+CELERY_RESULT_BACKEND = 'redis://redis:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+
+
 
 LOGIN_REDIRECT_URL = "problem_solving:index"
 
@@ -187,4 +219,3 @@ EMAIL_PORT = 25
 EMAIL_HOST_USER = "user"
 EMAIL_HOST_PASSWORD = "pass"
 
-# SITE_ID = 2

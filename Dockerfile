@@ -6,4 +6,5 @@ COPY . ./
 
 RUN pip install -r requirements.txt
 
-ENTRYPOINT /problem-solvig/manage.py runserver 0.0.0.0:$PORT_SERVER
+RUN chmod u+x entrypoint.sh
+ENTRYPOINT './entrypoint.sh'
