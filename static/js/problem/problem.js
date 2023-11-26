@@ -2,13 +2,12 @@ document.addEventListener('alpine:init', () => {
     Alpine.store('problem', {
         async init() {
             this.problems = await loadProblem('problems')
+            this.problems = this.problems.results
             this.problems = this._setProblemId()
             this.firstId = this.problems.length > 0 ? this.problems[0].id : false
             this.activeProblemId = localStorage.getItem(STORAGE_ACTIV_PROBLEM) || this.firstId
-            this.showTooltip = JSON.parse(
-                localStorage.getItem(STORAGE_IS_SHOW_TOOLTIP) || 'true')
-            this.showInputParts = JSON.parse(
-                localStorage.getItem(STORAGE_SHOW_INPUT_PARTS) || 'true')
+            this.showTooltip = JSON.parse(localStorage.getItem(STORAGE_IS_SHOW_TOOLTIP) || 'true')
+            this.showInputParts = JSON.parse(localStorage.getItem(STORAGE_SHOW_INPUT_PARTS) || 'true')
             this.initShowVars()
         },
         problems: [],
@@ -56,7 +55,7 @@ document.addEventListener('alpine:init', () => {
             })
         },
         _getProblem(id) {
-            return this.problems.find(p => p.id == id)
+            return this.problems.results.find(p => p.id == id)
         },
         _setProblemId() {
             return this.problems.map((problem) => {
@@ -155,11 +154,10 @@ document.addEventListener('alpine:init', () => {
             LIST_SHOWN_VARS.forEach((nameVar, id) => {
                 const storageVar = LIST_STORAGE_VARS[id]
                 this[storageVar] = `${USER.id}_${this.activeProblemId}_${nameVar}`
-                this[nameVar] = JSON.parse(localStorage.getItem(
-                    this[storageVar]) || (id === 0 ? 'true' : 'false')
+                this[nameVar] = JSON.parse(localStorage.getItem(this[storageVar]) || (id === 0 ? 'true' : 'false')
                 )
             })
-            // тут происходит следующие, только для вссего списка переменных
+            // тут происходит следующие, только для всего списка переменных
             // this.SHOW_SEARCH = `${USER.id}_${this.activeProblemId}_isShownSearch`
             // this.isShownSearch = JSON.parse(localStorage.getItem(this.SHOW_SEARCH) || 'true')
         },

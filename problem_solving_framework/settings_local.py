@@ -13,24 +13,27 @@ from concurrent.futures._base import LOGGER
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-
 # включаю возможность создавать многострочные теги в шаблонах
 import re
 from django.template import base
+
 base.tag_re = re.compile(base.tag_re.pattern, re.DOTALL)
-
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 ENV = BASE_DIR / '.env'
+if not ENV.is_file():
+    ENV = BASE_DIR / '.env-prod'
 load_dotenv(ENV)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-SECRET_KEY = os.environ.get('SECRET_KEY')
 
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get('SECRET_KEY')
+# SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = False
 DEBUG = os.environ.get('DEBUG')
 print(f"{DEBUG=}")
 
@@ -38,7 +41,13 @@ ALLOWED_HOSTS = [
     'localhost', '127.0.0.1', '31.129.102.53',
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    "http://31.129.102.53",
+    "http://31.129.102.53:8000",
+]
+
 # Application definition
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -53,11 +62,13 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_filters',
     'django.contrib.postgres',
+    'corsheaders',
     # 'django.contrib.sites',
     # 'account',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -97,12 +108,8 @@ WSGI_APPLICATION = 'problem_solving_framework.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_NAME', 'defaultdbname'),
-        'USER': os.environ.get('POSTGRES_USER', 'defaultuser'),
-        'PASSWORD': os.environ.get('POSTGRES_PASS', 'defaultpassword'),
-        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'sqlite3',
     }
 }
 
@@ -125,6 +132,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Europe/Moscow'
@@ -135,10 +143,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
+
 STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
@@ -160,6 +170,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
 }
+
 LOGIN_REDIRECT_URL = "problem_solving:index"
 
 ACCOUNT_EMAIL_UNIQUE = True

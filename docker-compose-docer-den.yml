@@ -17,31 +17,11 @@ services:
     volumes:
       - .:/usr/src/app
 
-  celery:
-    env_file: .env-prod
-    depends_on:
-      - pgdb
-      - redis
-    build:
-      context: .
-    networks:
-      - nginx_problem-solving-framework
-      - default
-    restart: always
-    volumes:
-      - .:/usr/src/app
-    command: celery -A problem_solving_framework worker --loglevel=info
-
-  redis:
-    image: redis:latest
-    networks:
-      - default
-
   pgdb:
     image: postgres
     environment:
-      - POSTGRES_DB=$POSTGRES_NAME
-      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_DB=$DATABASE_NAME
+      - DATABASE_USER=$DATABASE_USER
       - POSTGRES_PASSWORD=$POSTGRES_PASS
     container_name: pgdb
     networks:

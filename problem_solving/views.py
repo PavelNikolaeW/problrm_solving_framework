@@ -24,7 +24,7 @@ def notification(request, ):
 
 class SignUp(CreateView):
     form_class = CreationForm
-    success_url = reverse_lazy('problem_solving:index')
+    success_url = reverse_lazy('auth:login')
     template_name = 'registration/registration.html'
 
 
@@ -69,6 +69,7 @@ def index(request):
 
 
 def about(request):
+
     with open('templates/about_us.md', 'r', encoding='utf-8') as f:
         return render(request, 'about.html', {'content': f.read()})
 

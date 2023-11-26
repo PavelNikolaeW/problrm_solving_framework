@@ -1,6 +1,3 @@
-from idlelib.multicall import r
-from pprint import pprint
-
 from django.urls import path, include
 from rest_framework import routers
 

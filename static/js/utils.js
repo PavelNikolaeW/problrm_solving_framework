@@ -31,6 +31,7 @@ async function loadProblem(key) {
         })
         .catch(handleError)
 }
+
 async function loadFromServer(key) {
     return await api.wrapperFetch(`${key}/`, 'GET')
         .then((res) => res)
