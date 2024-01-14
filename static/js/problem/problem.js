@@ -55,7 +55,7 @@ document.addEventListener('alpine:init', () => {
             })
         },
         _getProblem(id) {
-            return this.problems.results.find(p => p.id == id)
+            return this.problems.find(p => p.id == id)
         },
         _setProblemId() {
             return this.problems.map((problem) => {

@@ -82,3 +82,6 @@ def todo(request):
 
 def byaes(request):
     return render(request, 'byaes.html')
+
+def chat(request):
+    return render(request, 'chat.html')

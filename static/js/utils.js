@@ -38,6 +38,12 @@ async function loadFromServer(key) {
         .catch(handleError)
 }
 
+async function loadChats(key) {
+    return await api.wrapperFetch(`${key}/`, 'GET')
+        .then((res) => res)
+        .catch(handleError)
+}
+
 const l = (value) => console.log(value)
 
 const STORAGE_ACTIV_PROBLEM = USER.id + 'activeProblemId'

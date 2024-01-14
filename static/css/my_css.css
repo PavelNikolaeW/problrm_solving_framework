@@ -17,7 +17,9 @@ textarea {
     min-height: 50px;
 }
 
-
+.message-item:hover .message-actions {
+    opacity: .5;
+}
 
 .cell-text {
     text-overflow: ellipsis;

@@ -22,6 +22,8 @@ urlpatterns = [
     path('', include("problem_solving.urls", namespace="problem_solving")),
     # api
     path('api/', include("api.urls", namespace="api_v1")),
+    # chat_api
+    path('api/', include('chat.urls', namespace='api_v1')),
     # auth
     # path(r"^account/", include(("account.urls", "auth"), namespace="auth")),
     path('accounts/', include(("django.contrib.auth.urls", "auth"), namespace="auth")),

@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'problem_solving.apps.ProblemSolvingConfig',
     'api',
+    'chat',
     'rest_framework',
     'rest_framework.authtoken',
     'django_extensions',
